@@ -1,6 +1,8 @@
+/** @type {import('postcss').Config} */
 export default {
   plugins: {
-    '@tailwindcss/postcss': {},
+    'tailwindcss/nesting': {},
+    tailwindcss: {},
     autoprefixer: {},
   },
 } 

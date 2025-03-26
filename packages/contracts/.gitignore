@@ -15,3 +15,16 @@ node_modules
 
 # Hardhat Ignition default folder for deployments against a local node
 ignition/deployments/chain-31337
+
+# Foundry files
+/foundry/out
+/foundry/cache
+/foundry/.coverage_artifacts
+/foundry/.coverage_cache
+/foundry/.coverage_contracts
+/foundry/broadcast
+/lib
+
+# Editor files
+.idea
+.vscode

@@ -1,14 +1,26 @@
 {
   "name": "contracts",
   "version": "1.0.0",
-  "description": "",
+  "description": "Smart contracts for LoanChain",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "hardhat:test": "hardhat test",
+    "hardhat:build": "hardhat compile",
+    "foundry:test": "forge test",
+    "foundry:build": "forge build",
+    "foundry:coverage": "forge coverage",
+    "test": "npm run foundry:test"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "smart-contracts",
+    "defi",
+    "lending",
+    "moonbeam"
+  ],
+  "author": "LoanChain Team",
+  "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.19"

@@ -7,10 +7,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "./components/ui/card";
 import { useAccount } from "wagmi";
 import { useNetworkInfo } from "./hooks/useNetworkInfo";
 import { NetworkSwitch } from "./components/layout/NetworkSwitch";
+import { LoanCreationWizard } from "./components/loan/LoanCreationWizard";
 
 function DappContent() {
   const { isConnected } = useAccount();
@@ -75,20 +76,8 @@ function DappContent() {
     );
   }
 
-  return (
-    <Card className="w-full max-w-lg">
-      <CardHeader>
-        <CardTitle>Connected to LoanChain</CardTitle>
-        <CardDescription>Ready to use the platform</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>
-          You're now connected to LoanChain on Moonbase Alpha. You can now
-          access the platform's features and manage your loans.
-        </p>
-      </CardContent>
-    </Card>
-  );
+  // When connected to the correct network, show loan creation wizard
+  return <LoanCreationWizard />;
 }
 
 function App() {
