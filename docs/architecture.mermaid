@@ -1,79 +1,108 @@
 graph TD
     %% Frontend Layer
-    FE[React Frontend] --> AG[API Gateway]
-    FE --> WC[Wallet Connection]
+    FE[React Frontend] --> WC[Wallet Connection]
+    FE --> LC[Loan Creation]
+    FE --> TF[Token Feed]
+    FE --> TD[Token Details]
+    FE --> TX[Transaction Handling]
     
-    %% API and Core Services
-    AG --> LM[Loan Module]
-    AG --> TM[Token Module]
-    AG --> AI[AI Enhancement Service]
+    %% Contract Integration
+    WC --> CI[Contract Integration]
+    LC --> CI
+    TF --> CI
+    TD --> CI
+    TX --> CI
+    
+    %% Services
+    CI --> MS[Metadata Service]
+    CI --> CS[Contract Service]
+    CI --> TS[Transaction Service]
+    CI --> FS[Feed Service]
+    CI --> DS[Token Detail Service]
     
     %% Blockchain Integration
-    WC --> MB[Moonbeam Testnet]
-    TM --> MB
+    CI --> MB[Moonbeam Testnet]
     MB --> SC[Smart Contracts]
     SC --> NFT[ERC-721 Token Contract]
-    SC --> REG[Loan Registry Contract]
     
     %% Storage Layer
-    LM --> IPFS[(IPFS/nft.storage)]
-    TM --> IPFS
+    MS --> IPFS[(IPFS/nft.storage)]
     
-    %% AI Processing
-    AI --> LLM[Local LLM/Ollama]
-    AI --> OAI[OpenAI Fallback]
-    
-    %% Event Bus for System Communication
-    EB[Event Bus] --> LM
-    EB --> TM
-    EB --> AI
-    
-    %% Subgraph for Data Indexing
-    MB --> SG[Subgraph Indexer]
+    %% UI Components
+    LC --> LDF[Loan Details Form]
+    LC --> MC[Metadata Confirmation]
+    TF --> LF[Loan Feed]
+    TF --> LCard[Loan Card]
+    TD --> TDV[Token Detail View]
+    TD --> BI[Blockchain Info]
+    TD --> MD[Metadata Display]
+    TX --> TN[Transaction Notification]
+    TX --> TH[Transaction History]
+    TX --> DP[Demo Page]
     
     %% Component Definitions
     subgraph Frontend Components
         FE
         WC
+        LC
+        TF
+        TD
+        TX
+        LDF
+        MC
+        LF
+        LCard
+        TDV
+        BI
+        MD
+        TN
+        TH
+        DP
     end
     
-    subgraph Core Services
-        AG
-        LM
-        TM
-        AI
+    subgraph Contract Integration Services
+        CI
+        MS
+        CS
+        TS
+        FS
+        DS
     end
     
     subgraph Blockchain Layer
         MB
         SC
         NFT
-        REG
     end
     
     subgraph Storage Layer
         IPFS
-        SG
-    end
-    
-    subgraph AI Layer
-        LLM
-        OAI
     end
     
     %% Styling
     style FE fill:#dfd,stroke:#333,stroke-width:2px
-    style AG fill:#f9f,stroke:#333,stroke-width:4px
-    style LM fill:#bbf,stroke:#333,stroke-width:2px
-    style TM fill:#bbf,stroke:#333,stroke-width:2px
-    style AI fill:#bbf,stroke:#333,stroke-width:2px
+    style WC fill:#dfd,stroke:#333,stroke-width:2px
+    style LC fill:#dfd,stroke:#333,stroke-width:2px
+    style TF fill:#dfd,stroke:#333,stroke-width:2px
+    style TD fill:#dfd,stroke:#333,stroke-width:2px
+    style TX fill:#dfd,stroke:#333,stroke-width:2px
+    style CI fill:#bbf,stroke:#333,stroke-width:2px
+    style MS fill:#bbf,stroke:#333,stroke-width:2px
+    style CS fill:#bbf,stroke:#333,stroke-width:2px
+    style TS fill:#bbf,stroke:#333,stroke-width:2px
+    style FS fill:#bbf,stroke:#333,stroke-width:2px
+    style DS fill:#bbf,stroke:#333,stroke-width:2px
     style MB fill:#ffd,stroke:#333,stroke-width:2px
     style SC fill:#ffd,stroke:#333,stroke-width:2px
     style NFT fill:#ffd,stroke:#333,stroke-width:2px
-    style REG fill:#ffd,stroke:#333,stroke-width:2px
     style IPFS fill:#fdb,stroke:#333,stroke-width:2px
-    style LLM fill:#fcf,stroke:#333,stroke-width:2px
-    style OAI fill:#fcf,stroke:#333,stroke-width:2px
-    style WC fill:#dfd,stroke:#333,stroke-width:2px
-    style EB fill:#ddd,stroke:#333,stroke-width:2px
-    style SG fill:#fdb,stroke:#333,stroke-width:2px
+    style LDF fill:#dfd,stroke:#333,stroke-width:1px
+    style MC fill:#dfd,stroke:#333,stroke-width:1px
+    style LF fill:#dfd,stroke:#333,stroke-width:1px
+    style LCard fill:#dfd,stroke:#333,stroke-width:1px
+    style TDV fill:#dfd,stroke:#333,stroke-width:1px
+    style BI fill:#dfd,stroke:#333,stroke-width:1px
+    style MD fill:#dfd,stroke:#333,stroke-width:1px
+    style TN fill:#dfd,stroke:#333,stroke-width:1px
+    style TH fill:#dfd,stroke:#333,stroke-width:1px
+    style DP fill:#dfd,stroke:#333,stroke-width:1px

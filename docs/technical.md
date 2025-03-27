@@ -213,15 +213,25 @@ describe("LoanRegistry", function () {
 ```
 /
 ├── apps/
-│   ├── frontend/          # React application
-│   └── ai-server/         # Local AI wrapper
+│   ├── frontend/          # React application (main)
+│   ├── docs/              # Documentation site (unused)
+│   ├── web/               # Web application (unused)
+│   └── ai-server/         # Local AI wrapper (unused)
 ├── contracts/             # Solidity smart contracts
 ├── packages/
-│   ├── ui/               # Shared UI components
-│   ├── token/            # Token management
-│   └── storage/          # IPFS integration
-└── scripts/              # Deployment and verification
+│   ├── ui/                # Shared UI components
+│   ├── contract-integration/ # Smart contract integration (unused - localized to frontend)
+│   ├── metadata/          # Metadata management
+│   ├── storage/           # IPFS integration
+│   ├── scripts/           # Deployment and utility scripts
+│   ├── eslint-config/     # Shared ESLint configuration
+│   └── typescript-config/ # Shared TypeScript configuration
+├── docs/                  # Project documentation
+└── tasks/                 # Development tasks tracking
 ```
+
+**Note on Contract Integration:**  
+The contract integration package is currently not in use. Instead, the frontend application has its own localized version of the integration services in `apps/frontend/src/lib/contract-integration/`. This approach was taken to simplify development and reduce cross-package dependencies while the project matures.
 
 ## Security Considerations
 

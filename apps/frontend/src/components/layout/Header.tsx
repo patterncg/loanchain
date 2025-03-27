@@ -11,6 +11,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { useState, useEffect } from "react";
 import type { Connector } from "wagmi";
 import { NetworkSwitch } from "./NetworkSwitch";
+import { Link } from "react-router-dom";
+import { History } from "lucide-react";
 
 export function Header() {
   const { isConnected, address } = useAccount();
@@ -173,7 +175,29 @@ export function Header() {
     <header className="bg-card text-card-foreground shadow-sm py-4">
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold">LoanChain</h1>
+          <Link to="/" className="text-xl font-bold">LoanChain</Link>
+          
+          {isConnected && (
+            <nav className="hidden md:flex items-center ml-6 space-x-4">
+              <Link to="/" className="text-sm hover:text-primary transition-colors">
+                Home
+              </Link>
+              <Link to="/create" className="text-sm hover:text-primary transition-colors">
+                Create Loan
+              </Link>
+              <Link to="/feed" className="text-sm hover:text-primary transition-colors">
+                Browse Loans
+              </Link>
+              <Link to="/transactions" className="text-sm hover:text-primary transition-colors flex items-center gap-1">
+                <History className="h-3.5 w-3.5" />
+                Transactions
+              </Link>
+              <Link to="/demo" className="text-sm hover:text-primary transition-colors flex items-center gap-1">
+                <span className="h-3.5 w-3.5">🔍</span>
+                Demo
+              </Link>
+            </nav>
+          )}
         </div>
 
         <div className="flex items-center gap-3">

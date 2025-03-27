@@ -10,6 +10,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { EnhancedLoanData } from "../../lib/contract-integration/types";
+import { TransactionNotification } from "@/components/transaction/TransactionNotification";
+import { useTransaction } from "@/hooks/useTransaction";
+import { TransactionStatus } from "@/lib/contract-integration/transaction.service";
 
 import { LoanDetailsForm } from "./LoanDetailsForm";
 import { MetadataConfirmation } from "./MetadataConfirmation";
@@ -50,6 +53,13 @@ export function LoanCreationWizard() {
     estimateGasFee,
     walletAddress,
   } = useContractIntegration();
+  
+  const { 
+    mintLoanToken, 
+    currentTransaction, 
+    isLoading: isTransactionLoading, 
+    clearCurrentTransaction 
+  } = useTransaction();
 
   // Initialize form with react-hook-form and zod validation
   const form = useForm<LoanForm>({
@@ -210,40 +220,27 @@ export function LoanCreationWizard() {
         loanTermsDocumentUrl: "https://example.com/terms",
       };
 
-      let mintResult;
-
-      // Check if metadataService is available
-      if (metadataService && walletAddress) {
-        // Upload metadata to IPFS and mint the token
-        mintResult = await metadataService.uploadAndMint(
-          walletAddress,
-          loanMetadata,
-        );
+      // Check if metadataService is available for metadata storage
+      let metadataUri = '';
+      
+      if (metadataService) {
+        // Upload metadata to IPFS first
+        metadataUri = await metadataService.uploadMetadata(loanMetadata);
       } else {
-        // In development mode or if service is unavailable, create a mock result
-        console.log(
-          "Metadata service or wallet not available, creating mock mint result",
-        );
-        mintResult = {
-          tokenId: Math.floor(Math.random() * 1000).toString(),
-          transactionHash: `0x${Array(64)
-            .fill(0)
-            .map(() => Math.floor(Math.random() * 16).toString(16))
-            .join("")}`,
-          blockNumber: 12345678,
-          metadataUri: `ipfs://mock/${Date.now()}`,
-        };
+        // Mock metadata URI in development environment
+        console.log("Metadata service unavailable, using mock URI");
+        metadataUri = `ipfs://mock/${Date.now()}`;
       }
-
-      toast({
-        title: "Success!",
-        description: `Loan token minted successfully. Token ID: ${mintResult.tokenId}`,
-      });
-
-      // Reset the form after successful submission
-      reset(defaultValues);
-      setCurrentStep(0);
-      setAiEnhancedData(null);
+      
+      // Mint the token using the transaction service if wallet is connected
+      if (walletAddress) {
+        await mintLoanToken(walletAddress, metadataUri, loanMetadata);
+        
+        // After successful submission, show the transaction notification but don't reset form yet
+        // Form will be reset once transaction completes successfully
+      } else {
+        throw new Error("Wallet address not available");
+      }
     } catch (error) {
       console.error("Error submitting loan:", error);
       toast({
@@ -251,10 +248,33 @@ export function LoanCreationWizard() {
         description: `Failed to mint loan token: ${error instanceof Error ? error.message : String(error)}`,
         variant: "destructive",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Handle transaction completion (reset form on success)
+  useEffect(() => {
+    if (currentTransaction?.status === TransactionStatus.SUCCESS) {
+      // Reset form after successful transaction
+      reset(defaultValues);
+      setCurrentStep(0);
+      setAiEnhancedData(null);
+      setIsSubmitting(false);
+      
+      // Show success toast
+      toast({
+        title: "Success!",
+        description: `Loan token minted successfully. Transaction confirmed.`,
+      });
+      
+      // Note: Redirect is now handled directly by the useTransaction hook,
+      // which will automatically redirect to the token detail page after
+      // a brief delay to let the user see the success notification.
+    } else if (currentTransaction?.status === TransactionStatus.FAILED) {
+      // Just reset the submitting state on failure (toast is handled by the hook)
+      setIsSubmitting(false);
+    }
+  }, [currentTransaction, reset, toast]);
 
   // Handle gas priority selection
   const handleGasPrioritySelect = (priority: "slow" | "average" | "fast") => {
@@ -262,51 +282,67 @@ export function LoanCreationWizard() {
     updateGasFeeEstimate(priority);
   };
 
-  // Render the current step content
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return <LoanDetailsForm />;
       case 1:
-        if (!aiEnhancedData) return <div>No loan data available</div>;
         return (
           <MetadataConfirmation
             enhancedData={aiEnhancedData}
-            onSubmit={onSubmit}
-            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit(onSubmit)}
+            isSubmitting={isSubmitting || isTransactionLoading}
             gasFeeEstimate={gasFeeEstimate}
             onGasPrioritySelect={handleGasPrioritySelect}
             selectedPriority={selectedPriority}
           />
         );
       default:
-        return <LoanDetailsForm />;
+        return null;
     }
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {/* Show contract error if any */}
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">Create Loan Token</h1>
+        <p className="text-muted-foreground">
+          Fill in the loan details to generate a new loan token on the
+          blockchain.
+        </p>
+      </div>
+
+      {/* Progress bar */}
+      <div className="space-y-1">
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>Progress</span>
+          <span>{currentStep + 1} of {steps.length}</span>
+        </div>
+        <Progress value={progress} className="h-2" />
+      </div>
+      
+      {/* Transaction notification */}
+      {currentTransaction && (
+        <div className="mb-4">
+          <TransactionNotification
+            status={currentTransaction.status}
+            type={currentTransaction.type}
+            hash={currentTransaction.hash}
+            error={currentTransaction.error}
+            onDismiss={clearCurrentTransaction}
+          />
+        </div>
+      )}
+
+      {/* Contract error banner */}
       {contractError && (
-        <Alert variant="destructive" className="mb-6">
+        <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Connection Error</AlertTitle>
           <AlertDescription>{contractError}</AlertDescription>
         </Alert>
       )}
 
-      {/* Form progress */}
-      <div className="mb-6">
-        <div className="flex justify-between mb-2">
-          <span className="text-sm">
-            Step {currentStep + 1} of {steps.length}
-          </span>
-          <span className="text-sm">{steps[currentStep].label}</span>
-        </div>
-        <Progress value={progress} className="h-2" />
-      </div>
-
-      {/* Form */}
       <div className="bg-card rounded-lg border shadow-sm p-6">
         <FormProvider {...form}>
           <form>
@@ -318,7 +354,7 @@ export function LoanCreationWizard() {
                 type="button"
                 variant="outline"
                 onClick={handlePrevStep}
-                disabled={currentStep === 0 || isSubmitting}
+                disabled={currentStep === 0 || isSubmitting || isTransactionLoading}
               >
                 Back
               </Button>
@@ -327,7 +363,7 @@ export function LoanCreationWizard() {
                 <Button
                   type="button"
                   onClick={handleNextStep}
-                  disabled={isAnalyzing || isSubmitting}
+                  disabled={isAnalyzing || isSubmitting || isTransactionLoading}
                 >
                   {isAnalyzing ? "Analyzing..." : "Next"}
                 </Button>
@@ -335,9 +371,9 @@ export function LoanCreationWizard() {
                 <Button
                   type="button"
                   onClick={handleSubmit(onSubmit)}
-                  disabled={isSubmitting || !hasMinterRole}
+                  disabled={isSubmitting || isTransactionLoading || !hasMinterRole}
                 >
-                  {isSubmitting ? "Submitting..." : "Mint Loan Token"}
+                  {isSubmitting || isTransactionLoading ? "Minting..." : "Mint Loan Token"}
                 </Button>
               )}
             </div>
