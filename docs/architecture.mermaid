@@ -1,0 +1,79 @@
+graph TD
+    %% Frontend Layer
+    FE[React Frontend] --> AG[API Gateway]
+    FE --> WC[Wallet Connection]
+    
+    %% API and Core Services
+    AG --> LM[Loan Module]
+    AG --> TM[Token Module]
+    AG --> AI[AI Enhancement Service]
+    
+    %% Blockchain Integration
+    WC --> MB[Moonbeam Testnet]
+    TM --> MB
+    MB --> SC[Smart Contracts]
+    SC --> NFT[ERC-721 Token Contract]
+    SC --> REG[Loan Registry Contract]
+    
+    %% Storage Layer
+    LM --> IPFS[(IPFS/nft.storage)]
+    TM --> IPFS
+    
+    %% AI Processing
+    AI --> LLM[Local LLM/Ollama]
+    AI --> OAI[OpenAI Fallback]
+    
+    %% Event Bus for System Communication
+    EB[Event Bus] --> LM
+    EB --> TM
+    EB --> AI
+    
+    %% Subgraph for Data Indexing
+    MB --> SG[Subgraph Indexer]
+    
+    %% Component Definitions
+    subgraph Frontend Components
+        FE
+        WC
+    end
+    
+    subgraph Core Services
+        AG
+        LM
+        TM
+        AI
+    end
+    
+    subgraph Blockchain Layer
+        MB
+        SC
+        NFT
+        REG
+    end
+    
+    subgraph Storage Layer
+        IPFS
+        SG
+    end
+    
+    subgraph AI Layer
+        LLM
+        OAI
+    end
+    
+    %% Styling
+    style FE fill:#dfd,stroke:#333,stroke-width:2px
+    style AG fill:#f9f,stroke:#333,stroke-width:4px
+    style LM fill:#bbf,stroke:#333,stroke-width:2px
+    style TM fill:#bbf,stroke:#333,stroke-width:2px
+    style AI fill:#bbf,stroke:#333,stroke-width:2px
+    style MB fill:#ffd,stroke:#333,stroke-width:2px
+    style SC fill:#ffd,stroke:#333,stroke-width:2px
+    style NFT fill:#ffd,stroke:#333,stroke-width:2px
+    style REG fill:#ffd,stroke:#333,stroke-width:2px
+    style IPFS fill:#fdb,stroke:#333,stroke-width:2px
+    style LLM fill:#fcf,stroke:#333,stroke-width:2px
+    style OAI fill:#fcf,stroke:#333,stroke-width:2px
+    style WC fill:#dfd,stroke:#333,stroke-width:2px
+    style EB fill:#ddd,stroke:#333,stroke-width:2px
+    style SG fill:#fdb,stroke:#333,stroke-width:2px

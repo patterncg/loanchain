@@ -8,6 +8,12 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@loanchain/contract-integration": path.resolve(__dirname, "../../packages/contract-integration/src"),
+      "@loanchain/metadata": path.resolve(__dirname, "../../packages/metadata/src"),
+      "@loanchain/storage": path.resolve(__dirname, "../../packages/storage/src"),
     },
+  },
+  optimizeDeps: {
+    include: ["@loanchain/contract-integration", "@loanchain/metadata", "@loanchain/storage"],
   },
 });

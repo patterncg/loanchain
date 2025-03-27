@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LoanChain NFT Metadata",
+  "description": "Schema for validating LoanChain NFT metadata",
+  "type": "object",
+  "required": ["name", "description", "image", "properties"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the NFT, typically includes the token ID"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the loan, typically the AI summary"
+    },
+    "image": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI pointing to the token image"
+    },
+    "external_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "External URL for viewing the token in a web browser"
+    },
+    "animation_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to any animation associated with the token"
+    },
+    "attributes": {
+      "type": "array",
+      "description": "Attributes for display in NFT marketplaces",
+      "items": {
+        "type": "object",
+        "required": ["trait_type", "value"],
+        "properties": {
+          "trait_type": {
+            "type": "string",
+            "description": "Name of the trait"
+          },
+          "value": {
+            "type": ["string", "number"],
+            "description": "Value of the trait"
+          },
+          "display_type": {
+            "type": "string",
+            "enum": ["number", "date", "boost_percentage", "boost_number"],
+            "description": "How the trait should be displayed in marketplaces"
+          }
+        }
+      }
+    },
+    "properties": {
+      "type": "object",
+      "description": "Loan-specific properties",
+      "required": ["id", "amount", "interestRate", "term", "collateralType", "collateralValue", "purpose", "issuer", "timestamp", "schemaVersion"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the loan token"
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Loan amount"
+        },
+        "interestRate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Annual interest rate percentage"
+        },
+        "term": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Loan term in months"
+        },
+        "collateralType": {
+          "type": "string",
+          "description": "Type of collateral for the loan"
+        },
+        "collateralValue": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Value of the collateral"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Purpose of the loan"
+        },
+        "borrowerDetails": {
+          "type": "object",
+          "description": "Details about the borrower",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the borrower"
+            },
+            "creditScore": {
+              "type": "number",
+              "minimum": 300,
+              "maximum": 850,
+              "description": "Credit score of the borrower"
+            }
+          }
+        },
+        "aiSummary": {
+          "type": "string",
+          "description": "AI-generated summary of the loan"
+        },
+        "riskTag": {
+          "type": "string",
+          "description": "Risk assessment tag"
+        },
+        "issuer": {
+          "type": "string",
+          "description": "Wallet address of the issuer",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "timestamp": {
+          "type": "number",
+          "description": "Unix timestamp when the metadata was created"
+        },
+        "loanTermsDocumentUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI pointing to the loan terms document"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Active", "Repaid", "Defaulted", "Liquidated", "Cancelled"],
+          "description": "Current status of the loan"
+        },
+        "dueDate": {
+          "type": "number",
+          "description": "Unix timestamp when the loan is due"
+        },
+        "metadataUri": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI where this metadata is stored"
+        },
+        "mintTransactionId": {
+          "type": "string",
+          "description": "Blockchain transaction ID of the mint transaction",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "mintBlockNumber": {
+          "type": "number",
+          "description": "Block number when the token was minted"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorization"
+        },
+        "schemaVersion": {
+          "type": "string",
+          "description": "Version of the metadata schema"
+        }
+      }
+    }
+  }
+} 

@@ -1,7 +1,8 @@
 import { LoanForm, AiEnhancedLoan } from "@/schemas/loan";
 
 // Base URL for the AI server API
-const AI_API_BASE_URL = "http://localhost:3001/api";
+// This is exported for configuration purposes but commented out in actual implementation
+export const AI_API_BASE_URL = "http://localhost:3001/api";
 
 /**
  * Enhanced Loan API
@@ -17,7 +18,7 @@ export const loanApi = {
    */
   async enhanceLoan(loanData: LoanForm): Promise<AiEnhancedLoan> {
     try {
-      // In a real implementation, this would make an actual API call
+      // In a real implementation, this would make an actual API call using AI_API_BASE_URL
       // const response = await fetch(`${AI_API_BASE_URL}/enhance-loan`, {
       //   method: "POST",
       //   headers: {
@@ -54,8 +55,7 @@ function mockEnhanceLoanResponse(loanData: LoanForm): AiEnhancedLoan {
     Math.round(
       (amount > 10000 ? 50 : 30) + 
       (interestRate < 5 ? 20 : 0) - 
-      (loanData.borrower?.creditScore ? 
-        (loanData.borrower.creditScore - 500) / 10 : 15)
+      (amount < 5000 ? 15 : 0)
     ), 
     100
   );
@@ -68,25 +68,11 @@ function mockEnhanceLoanResponse(loanData: LoanForm): AiEnhancedLoan {
     riskAssessment = "Medium Risk";
   }
   
-  // Recommended interest rate (slightly higher than provided if risk is high)
-  const recommendedInterestRate = 
-    riskScore > 70 ? interestRate + 2 : 
-    riskScore > 40 ? interestRate + 1 : 
-    Math.max(interestRate - 0.5, 1);
-  
   return {
     original: loanData,
     enhanced: {
       riskScore,
-      riskAssessment,
-      recommendedInterestRate,
-      recommendedCollateral: amount > 5000 ? "Recommended additional collateral to secure this loan" : undefined,
-      marketComparison: `This loan has an interest rate ${
-        interestRate > 7 ? "higher" : "lower"
-      } than the current market average for similar loans.`,
-      additionalNotes: riskScore > 60 
-        ? "Consider requesting additional documentation or reducing the loan amount."
-        : "This loan appears to be within acceptable risk parameters.",
+      riskAssessment
     }
   };
 } 

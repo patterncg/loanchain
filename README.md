@@ -1,84 +1,62 @@
-# Turborepo starter
+# LoanChain - Decentralized Lending Platform
 
-This Turborepo starter is maintained by the Turborepo core team.
+LoanChain is a decentralized lending platform built on the Moonbase Alpha testnet. It enables users to create, view, and manage loans through smart contracts.
 
-## Using this example
+## Project Structure
 
-Run the following command:
+This is a simplified monorepo setup:
 
-```sh
-npx create-turbo@latest
-```
+- **apps/frontend**: Main application UI (React + Vite)
+- **apps/ai-server**: AI enhancement service for loan data
+- **packages/contract-integration**: Smart contract interaction utilities
+- **packages/metadata**: Loan metadata creation and validation
+- **packages/storage**: IPFS integration for metadata storage
 
-## What's inside?
+## Development
 
-This Turborepo includes the following packages/apps:
+### Quickstart
 
-### Apps and Packages
+```bash
+# Install dependencies
+pnpm install
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+# Start the main frontend app
+pnpm dev:app
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+# Start the AI server (optional)
+pnpm dev:ai
 
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
+# Start everything (not recommended for regular development)
 pnpm dev
 ```
 
-### Remote Caching
+### UI Components
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+The application uses [shadcn/ui](https://ui.shadcn.com/) with [Radix UI](https://www.radix-ui.com/) primitives for a consistent design system. All UI components are located in `apps/frontend/src/components/ui`.
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+### Smart Contract Integration
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Smart contract interaction is simplified through the `contract-integration` package, which provides:
+- Contract service for minting loan tokens
+- Metadata service for IPFS storage and contract integration
 
-```
-cd my-turborepo
-npx turbo login
-```
+## Project Simplification
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+The project has been streamlined for simplicity:
+- Using a single UI library (shadcn/ui + Radix)
+- Focused on core functionality (loan creation and viewing)
+- Unnecessary test components removed
+- Development workflow simplified
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## Technologies
 
-```
-npx turbo link
-```
+- **Frontend**: React 19, Vite, TailwindCSS, shadcn/ui
+- **Backend**: Express (AI server)
+- **Blockchain**: Moonbeam (EVM-compatible chain)
+- **Smart Contracts**: Solidity, deployed on Moonbase Alpha testnet
+- **Storage**: IPFS via nft.storage
+- **Dev Tools**: TypeScript, Turbo, pnpm workspaces
 
-## Useful Links
+## License
 
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+MIT

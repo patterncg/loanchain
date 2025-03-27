@@ -10,6 +10,9 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:app": "pnpm --filter frontend dev",
+    "dev:ai": "pnpm --filter ai-server dev",
+    "dev:no-web": "pnpm --filter=\"!web\" dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

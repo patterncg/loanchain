@@ -9,14 +9,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export function LoanDetailsForm() {
   const form = useFormContext<LoanForm>();
@@ -83,89 +75,20 @@ export function LoanDetailsForm() {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="loanDetails.term"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Term</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="0"
-                    {...field}
-                    type="number"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="loanDetails.termUnit"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Unit</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select unit" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="days">Days</SelectItem>
-                    <SelectItem value="weeks">Weeks</SelectItem>
-                    <SelectItem value="months">Months</SelectItem>
-                    <SelectItem value="years">Years</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
         <FormField
           control={form.control}
-          name="loanDetails.purpose"
+          name="loanDetails.term"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loan Purpose</FormLabel>
+              <FormLabel>Term (Months)</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Describe the purpose of this loan"
+                  placeholder="0"
                   {...field}
+                  type="number"
                 />
               </FormControl>
-              <FormDescription>
-                Briefly describe what the loan will be used for.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="loanDetails.collateral"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Collateral (Optional)</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe any collateral for this loan"
-                  className="min-h-[80px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                List any assets that will be used as collateral.
-              </FormDescription>
+              <FormDescription>Loan duration in months.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
