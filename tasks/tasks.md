@@ -344,25 +344,34 @@ Dependencies: DEPLOY-001
 
 ## TEST-002: Frontend Component Tests with Vitest
 
-Status: Not Started
-Priority: High
-Dependencies: FEED-001, FEED-002
+**Status: In Progress**
 
-### Requirements
+Implement unit tests for frontend components using Vitest.
 
-- Write unit tests for all frontend components
-- Ensure components render correctly and handle user interactions
+#### Implementation
 
-### Acceptance Criteria
+- [x] Set up Vitest with React Testing Library
+- [x] Create test utilities and mock providers
+- [x] Test UI components successfully
+  - [x] Button component (7 tests passing)
+  - [x] TransactionNotification (10 tests passing)
+  - [x] TransactionHistory (5 tests passing)
+- [ ] Fix hook tests
+  - [x] Implement useTransaction tests
+  - [ ] Fix mock implementations
+- [ ] Fix contract integration tests
+  - [ ] Update test expectations
+- [ ] Test form components and wizards
+- [ ] Create snapshot tests for key components
+- [ ] Test contract integration with mock implementations
+- [ ] Achieve minimum 80% code coverage
 
-1. All frontend components are covered by tests
-2. Tests verify correct rendering and user interaction handling
-3. Test results are documented and reviewed
+#### Technical Notes
 
-### Technical Notes
-
-- Use Vitest for writing and running frontend tests
-- Follow component testing guidelines from technical.md
+- Use React Testing Library for component testing
+- Mock providers and contexts with testing utilities
+- Focus on component behavior rather than implementation details
+- Test UI, hooks, and services separately
 
 ---
 
@@ -496,3 +505,39 @@ Dependencies: None
 ## Original Tasks
 
 // ... existing tasks ...
+
+## Key Priority Tasks
+
+1. **Fix Frontend Tests (TEST-002)**
+   - ✅ Basic UI components tests are passing (22 tests)
+   - ⏳ Hook tests for useTransaction need improved mocking
+   - ⏳ Contract integration tests need expectation updates
+
+2. **Deploy to Moonbase Alpha (DEPLOY-001)**
+   - ✅ Set up deployment scripts for smart contracts
+   - ✅ Create deployment documentation
+   - ✅ Implement automated deployment process
+   - ⏳ Deploy contracts to Moonbase Alpha testnet
+   - ⏳ Document contract addresses and deployment process
+
+3. **Start Smart Contract Tests (TEST-001)**
+   - Set up Foundry testing environment
+   - Write basic tests for core contract functions
+   - Focus on testing loan creation, retrieval, and status updates
+
+## Next Steps After Current Priorities
+
+1. **Contract Verification (DEPLOY-002)**
+   - Create verification scripts for contracts on Moonbase Alpha
+   - Verify deployed contracts using Moonscan
+   - Document verification process
+
+2. **Frontend Deployment (DEPLOY-003)**
+   - Set up Vercel deployment configuration
+   - Configure environment variables for different environments
+   - Deploy frontend application to Vercel
+
+3. **E2E Testing (TEST-003)**
+   - Set up Playwright for E2E testing
+   - Create basic E2E tests for critical user flows
+   - Test complete loan creation and viewing process

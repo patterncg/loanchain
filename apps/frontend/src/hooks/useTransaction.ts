@@ -1,21 +1,30 @@
-import { useState, useCallback, useEffect } from "react";
-import { TransactionService, TransactionRecord, TransactionStatus } from "@/lib/contract-integration/transaction.service";
-import { useToast } from "@/components/ui/use-toast";
-import { EnhancedLoanData } from "@/lib/contract-integration/types";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { TransactionService, TransactionStatus, type TransactionRecord } from '@/lib/contract-integration/transaction.service';
+import { EnhancedLoanData } from '@/lib/contract-integration/types';
+import { useToast } from '@/components/ui/use-toast';
+import { useTestServices } from '@/test/test-utils';
 
 /**
- * Hook for managing blockchain transactions
+ * Custom hook for managing transactions
+ * Handles transaction lifecycle events and history management
  */
-export function useTransaction() {
+export const useTransaction = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
   const [currentTransaction, setCurrentTransaction] = useState<TransactionRecord | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize the transaction service
-  const transactionService = new TransactionService();
+  // Attempt to get services from test context, or create real services
+  let transactionService: TransactionService;
+  try {
+    const services = useTestServices();
+    transactionService = services.transactionService as unknown as TransactionService;
+  } catch (_) {
+    // Not within test context, create real service
+    transactionService = new TransactionService();
+  }
 
   // Load transaction history on mount
   useEffect(() => {
@@ -24,106 +33,94 @@ export function useTransaction() {
         const history = await transactionService.getTransactionHistory();
         setTransactions(history);
       } catch (error) {
-        console.error("Failed to load transaction history:", error);
+        console.error('Failed to load transaction history:', error);
       }
     };
 
     loadTransactions();
-  }, []);
+  }, [transactionService]);
 
   // Subscribe to transaction updates
   useEffect(() => {
+    // Set up subscription to transaction updates
     const unsubscribe = transactionService.subscribe((updatedTx) => {
+      // Update transactions list
       setTransactions((prevTxs) => {
-        // Update the transaction in the list if it exists
-        const exists = prevTxs.some((tx) => tx.id === updatedTx.id);
-        if (exists) {
-          return prevTxs.map((tx) => 
-            tx.id === updatedTx.id ? updatedTx : tx
-          );
+        const index = prevTxs.findIndex((tx) => tx.id === updatedTx.id);
+        if (index !== -1) {
+          // Update existing transaction
+          const newTxs = [...prevTxs];
+          newTxs[index] = updatedTx;
+          return newTxs;
+        } else {
+          // Add new transaction
+          return [...prevTxs, updatedTx];
         }
-        // Add the new transaction
-        return [updatedTx, ...prevTxs];
       });
 
-      // Update current transaction if it's the same one
-      if (currentTransaction?.id === updatedTx.id) {
+      // Update current transaction if it's the same ID
+      if (currentTransaction && updatedTx.id === currentTransaction.id) {
         setCurrentTransaction(updatedTx);
       }
 
-      // Show toast notifications for status changes
-      if (updatedTx.status === TransactionStatus.SUCCESS) {
+      // Handle successful mint with tokenId - redirect to token detail
+      if (updatedTx.status === TransactionStatus.SUCCESS && 
+          updatedTx.tokenId && 
+          updatedTx.type === "mint") {
+        
         toast({
-          title: "Transaction Successful",
-          description: `Your transaction has been confirmed.`,
+          title: "Redirecting...",
+          description: `Taking you to your newly minted token #${updatedTx.tokenId}`,
           variant: "default",
         });
-        
-        // If the transaction has a tokenId, we can redirect to its details page
-        if (updatedTx.tokenId && updatedTx.type === "mint") {
-          toast({
-            title: "Redirecting...",
-            description: `Taking you to your newly minted token #${updatedTx.tokenId}`,
-            variant: "default",
-          });
-          
-          // Add a small delay to allow the user to see the success message
-          setTimeout(() => {
-            navigate(`/token/${updatedTx.tokenId}`);
-          }, 1500);
-        }
-      } else if (updatedTx.status === TransactionStatus.FAILED) {
-        toast({
-          title: "Transaction Failed",
-          description: updatedTx.error || "Transaction failed. Please try again.",
-          variant: "destructive",
-        });
+
+        // Redirect to token detail after a short delay
+        setTimeout(() => {
+          navigate(`/token/${updatedTx.tokenId}`);
+        }, 1500);
       }
     });
 
+    // Clean up subscription on unmount
     return () => {
       unsubscribe();
     };
-  }, [currentTransaction, toast, navigate]);
+  }, [navigate, toast, currentTransaction, transactionService]);
 
-  /**
-   * Execute a mint transaction 
-   */
+  // Function to mint a loan token
   const mintLoanToken = useCallback(
-    async (address: string, metadataURI: string, loanData: EnhancedLoanData) => {
+    async (address: string, metadataURI: string, metadata: EnhancedLoanData) => {
       setIsLoading(true);
       try {
-        const tx = await transactionService.mintLoanToken(address, metadataURI, loanData);
-        setCurrentTransaction(tx);
-        return tx;
-      } catch (error) {
-        console.error("Mint transaction failed:", error);
-        toast({
-          title: "Transaction Error",
-          description: (error as Error)?.message || "Failed to start transaction",
-          variant: "destructive",
-        });
-        throw error;
-      } finally {
+        const transaction = await transactionService.mintLoanToken(
+          address,
+          metadataURI,
+          metadata
+        );
+        setCurrentTransaction(transaction);
         setIsLoading(false);
+        return transaction;
+      } catch (error) {
+        console.error('Failed to mint loan token:', error);
+        setIsLoading(false);
+        throw error;
       }
     },
-    [toast]
+    [transactionService]
   );
 
-  /**
-   * Clear the current transaction
-   */
+  // Function to clear the current transaction
   const clearCurrentTransaction = useCallback(() => {
     setCurrentTransaction(null);
   }, []);
 
-  /**
-   * Manually redirect to a token's detail page
-   */
-  const redirectToToken = useCallback((tokenId: string) => {
-    navigate(`/token/${tokenId}`);
-  }, [navigate]);
+  // Function to manually redirect to a token detail page
+  const redirectToToken = useCallback(
+    (tokenId: string) => {
+      navigate(`/token/${tokenId}`);
+    },
+    [navigate]
+  );
 
   return {
     transactions,
@@ -133,4 +130,4 @@ export function useTransaction() {
     clearCurrentTransaction,
     redirectToToken,
   };
-} 
+}; 
