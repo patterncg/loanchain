@@ -33,7 +33,7 @@ export function JsonImport({ onImport, onCancel }: JsonImportProps) {
         if (e instanceof z.ZodError) {
           // Format Zod error messages
           const errorMessages = e.errors.map(
-            (err) => `${err.path.join(".")}: ${err.message}`
+            (err) => `${err.path.join(".")}: ${err.message}`,
           );
           setError(`Validation errors:\n${errorMessages.join("\n")}`);
         } else {
@@ -97,4 +97,4 @@ export function JsonImport({ onImport, onCancel }: JsonImportProps) {
       </div>
     </div>
   );
-} 
+}

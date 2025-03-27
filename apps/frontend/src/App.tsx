@@ -101,13 +101,17 @@ function AppContent() {
         // Check if we have an Ethereum provider
         if (typeof window !== "undefined" && window.ethereum) {
           // Get accounts to check if already connected
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          const accounts = await window.ethereum.request({
+            method: "eth_accounts",
+          });
           const isConnectedToMetaMask = accounts && accounts.length > 0;
-          
+
           // If MetaMask is connected but wagmi doesn't reflect this
           if (isConnectedToMetaMask && !isConnected) {
             setWalletError(true);
-            console.log("MetaMask appears to be connected but application state doesn't reflect this");
+            console.log(
+              "MetaMask appears to be connected but application state doesn't reflect this",
+            );
           } else {
             setWalletError(false);
           }
@@ -141,9 +145,9 @@ function AppContent() {
 
         {/* Connection helper toggle */}
         <div className="w-full max-w-3xl flex justify-end">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowFixer(!showFixer)}
             className="text-xs"
           >
@@ -153,18 +157,19 @@ function AppContent() {
 
         {/* MetaMask connection helper */}
         {showFixer && <MetaMaskFixer onConnect={handleRefresh} />}
-        
+
         {/* Show wallet error message if needed */}
         {walletError && !showFixer && initialDetectionDone && (
           <Card className="w-full max-w-lg bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
             <CardContent className="pt-6">
               <div className="flex flex-col items-center gap-3">
                 <p className="text-yellow-800 dark:text-yellow-300">
-                  Wallet connection might be required. Use the Connection Helper to synchronize.
+                  Wallet connection might be required. Use the Connection Helper
+                  to synchronize.
                 </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setShowFixer(true)}
                   className="bg-yellow-100 dark:bg-yellow-900/40"
                 >
@@ -174,7 +179,7 @@ function AppContent() {
             </CardContent>
           </Card>
         )}
-        
+
         <DappContent />
       </div>
     </Layout>

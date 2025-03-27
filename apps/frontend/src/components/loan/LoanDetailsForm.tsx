@@ -43,7 +43,9 @@ export function LoanDetailsForm() {
                   />
                 </div>
               </FormControl>
-              <FormDescription>Enter the amount you wish to borrow.</FormDescription>
+              <FormDescription>
+                Enter the amount you wish to borrow.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -82,11 +84,7 @@ export function LoanDetailsForm() {
             <FormItem>
               <FormLabel>Term (Months)</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="0"
-                  {...field}
-                  type="number"
-                />
+                <Input placeholder="0" {...field} type="number" />
               </FormControl>
               <FormDescription>Loan duration in months.</FormDescription>
               <FormMessage />
@@ -96,4 +94,4 @@ export function LoanDetailsForm() {
       </div>
     </div>
   );
-} 
+}

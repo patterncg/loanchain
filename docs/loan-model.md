@@ -141,4 +141,4 @@ When working with the simplified loan model:
 1. Always validate user input using the provided Zod schemas
 2. Maintain type safety through consistent use of TypeScript interfaces
 3. Keep UI components focused on the core data elements
-4. Use optional fields judiciously to avoid cluttering the interface 
+4. Use optional fields judiciously to avoid cluttering the interface

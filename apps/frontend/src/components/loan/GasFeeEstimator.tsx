@@ -7,9 +7,9 @@ interface GasFeeEstimatorProps {
   baseEstimate?: string;
   baseFeeUsd?: string;
   priorityOptions?: {
-    slow: { fee: string, time: string, usd: string };
-    average: { fee: string, time: string, usd: string };
-    fast: { fee: string, time: string, usd: string };
+    slow: { fee: string; time: string; usd: string };
+    average: { fee: string; time: string; usd: string };
+    fast: { fee: string; time: string; usd: string };
   };
   onPrioritySelect?: (priority: "slow" | "average" | "fast") => void;
 }
@@ -22,9 +22,11 @@ export function GasFeeEstimator({
     average: { fee: "0.00055 ETH", time: "~2 min", usd: "$1.45" },
     fast: { fee: "0.00065 ETH", time: "~30 sec", usd: "$1.70" },
   },
-  onPrioritySelect
+  onPrioritySelect,
 }: GasFeeEstimatorProps) {
-  const [selectedPriority, setSelectedPriority] = useState<"slow" | "average" | "fast">("average");
+  const [selectedPriority, setSelectedPriority] = useState<
+    "slow" | "average" | "fast"
+  >("average");
 
   const handlePriorityChange = (priority: "slow" | "average" | "fast") => {
     setSelectedPriority(priority);
@@ -54,7 +56,7 @@ export function GasFeeEstimator({
               <p className="text-xs text-muted-foreground">{baseFeeUsd}</p>
             </div>
           </div>
-          
+
           <div className="border-t pt-3">
             <p className="text-sm mb-2 flex items-center gap-1.5">
               Transaction Priority
@@ -64,7 +66,7 @@ export function GasFeeEstimator({
                 </span>
               </Tooltip>
             </p>
-            
+
             <div className="grid grid-cols-3 gap-2 mt-2">
               <PriorityOption
                 label="Slow"
@@ -93,16 +95,22 @@ export function GasFeeEstimator({
             </div>
           </div>
         </div>
-        
+
         <div className="border-t pt-4">
           <div className="flex justify-between">
             <div>
               <p className="font-medium">Total Estimated Fee</p>
-              <p className="text-xs text-muted-foreground">May vary based on network conditions</p>
+              <p className="text-xs text-muted-foreground">
+                May vary based on network conditions
+              </p>
             </div>
             <div className="flex flex-col items-end">
-              <p className="font-medium">{priorityOptions[selectedPriority].fee}</p>
-              <p className="text-xs text-muted-foreground">{priorityOptions[selectedPriority].usd}</p>
+              <p className="font-medium">
+                {priorityOptions[selectedPriority].fee}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {priorityOptions[selectedPriority].usd}
+              </p>
             </div>
           </div>
         </div>
@@ -120,7 +128,13 @@ interface PriorityOptionProps {
   onClick: () => void;
 }
 
-function PriorityOption({ label, time, usd, isSelected, onClick }: PriorityOptionProps) {
+function PriorityOption({
+  label,
+  time,
+  usd,
+  isSelected,
+  onClick,
+}: PriorityOptionProps) {
   return (
     <Button
       variant={isSelected ? "default" : "outline"}
@@ -129,7 +143,11 @@ function PriorityOption({ label, time, usd, isSelected, onClick }: PriorityOptio
     >
       <span className="text-sm font-medium">{label}</span>
       <span className="text-xs">{time}</span>
-      <span className={`text-xs ${isSelected ? "text-white" : "text-muted-foreground"}`}>{usd}</span>
+      <span
+        className={`text-xs ${isSelected ? "text-white" : "text-muted-foreground"}`}
+      >
+        {usd}
+      </span>
     </Button>
   );
-} 
+}

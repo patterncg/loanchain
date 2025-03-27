@@ -28,4 +28,4 @@ export interface MetadataServiceConfig {
   pinataApiKey?: string;
   pinataSecretKey?: string;
   contractService: any;
-} 
+}

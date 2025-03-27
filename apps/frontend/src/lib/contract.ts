@@ -1,14 +1,16 @@
-import { 
-  ContractService, 
-  MetadataService, 
-  ChainId, 
-  networkConfigs 
+import {
+  ContractService,
+  MetadataService,
+  ChainId,
+  networkConfigs,
 } from "./contract-integration/index";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 // Get the contract address based on chain ID
-export const getContractAddress = (chainId: number = ChainId.MOONBASE_ALPHA) => {
+export const getContractAddress = (
+  chainId: number = ChainId.MOONBASE_ALPHA,
+) => {
   const network = networkConfigs[chainId as ChainId];
   if (!network) {
     throw new Error(`Network configuration not found for chain ID: ${chainId}`);
@@ -17,7 +19,9 @@ export const getContractAddress = (chainId: number = ChainId.MOONBASE_ALPHA) => 
 };
 
 // Initialize contract service
-export const getContractService = (chainId: number = ChainId.MOONBASE_ALPHA) => {
+export const getContractService = (
+  chainId: number = ChainId.MOONBASE_ALPHA,
+) => {
   return new ContractService({
     loanRegistryAddress: getContractAddress(chainId),
     chainId,
@@ -25,13 +29,15 @@ export const getContractService = (chainId: number = ChainId.MOONBASE_ALPHA) => 
 };
 
 // Initialize metadata service
-export const getMetadataService = (chainId: number = ChainId.MOONBASE_ALPHA) => {
+export const getMetadataService = (
+  chainId: number = ChainId.MOONBASE_ALPHA,
+) => {
   const contractService = getContractService(chainId);
-  
+
   // Use import.meta.env for Vite instead of process.env
-  const pinataApiKey = import.meta.env.VITE_PINATA_API_KEY || '';
-  const pinataSecretKey = import.meta.env.VITE_PINATA_SECRET_KEY || '';
-  
+  const pinataApiKey = import.meta.env.VITE_PINATA_API_KEY || "";
+  const pinataSecretKey = import.meta.env.VITE_PINATA_SECRET_KEY || "";
+
   return new MetadataService({
     ipfsGateway: "https://gateway.pinata.cloud",
     pinataApiKey,
@@ -43,10 +49,11 @@ export const getMetadataService = (chainId: number = ChainId.MOONBASE_ALPHA) => 
 // React hook for contract integration
 export const useContractIntegration = () => {
   const { address, chainId } = useAccount();
-  const [metadataService, setMetadataService] = useState<MetadataService | null>(null);
+  const [metadataService, setMetadataService] =
+    useState<MetadataService | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     try {
       if (chainId) {
@@ -60,29 +67,33 @@ export const useContractIntegration = () => {
       }
     } catch (err) {
       console.error("Error initializing contract services:", err);
-      setError("Failed to initialize contract services. Please check your network connection.");
+      setError(
+        "Failed to initialize contract services. Please check your network connection.",
+      );
     } finally {
       setIsLoading(false);
     }
   }, [chainId]);
-  
+
   // Check if the user has minter role
   const checkMinterRole = async () => {
     if (!address || !metadataService) return false;
-    
+
     try {
-      const contractService = metadataService["contractService"] as ContractService;
+      const contractService = metadataService[
+        "contractService"
+      ] as ContractService;
       return await contractService.hasMinterRole(address);
     } catch (err) {
       console.error("Error checking minter role:", err);
       return false;
     }
   };
-  
+
   // Estimate gas fee for minting
   const estimateGasFee = async () => {
     if (!address || !metadataService) return 0;
-    
+
     try {
       return await metadataService.estimateGasFee(address);
     } catch (err) {
@@ -90,13 +101,13 @@ export const useContractIntegration = () => {
       return 0;
     }
   };
-  
-  return { 
-    metadataService, 
-    isLoading, 
+
+  return {
+    metadataService,
+    isLoading,
     error,
     checkMinterRole,
     estimateGasFee,
     walletAddress: address,
   };
-}; 
+};

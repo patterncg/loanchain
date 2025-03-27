@@ -27,18 +27,19 @@ export function getRiskAssessment(loanData: LoanData): string {
   } = loanData;
 
   // Calculate loan-to-value ratio if collateral exists
-  const ltvRatio = collateralType && collateralValue
-    ? (loanAmount / collateralValue) * 100
-    : null;
-  
-  const ltvDescription = ltvRatio 
+  const ltvRatio =
+    collateralType && collateralValue
+      ? (loanAmount / collateralValue) * 100
+      : null;
+
+  const ltvDescription = ltvRatio
     ? `Loan-to-Value Ratio: ${ltvRatio.toFixed(2)}%`
-    : 'No collateral (unsecured loan)';
+    : "No collateral (unsecured loan)";
 
   // Create credit score description if provided
   const creditDescription = borrowerCreditScore
     ? `Borrower Credit Score: ${borrowerCreditScore}`
-    : 'Credit score not provided';
+    : "Credit score not provided";
 
   // Build the prompt
   return `
@@ -50,7 +51,7 @@ LOAN DETAILS:
 - Loan Term: ${loanTerm} months
 - ${ltvDescription}
 - ${creditDescription}
-- Purpose: ${purpose || 'Not specified'}
+- Purpose: ${purpose || "Not specified"}
 
 Your response should include:
 1. An overall risk rating (Low, Medium, or High)
@@ -64,4 +65,4 @@ Format your response as JSON with the following structure:
   "recommendations": ["recommendation1", "recommendation2"]
 }
 `;
-} 
+}

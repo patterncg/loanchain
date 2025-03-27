@@ -77,4 +77,4 @@ The Metadata Confirmation step has been integrated into the existing `LoanCreati
 - **TOKEN-002** (Completed): Prepare Metadata JSON
 - **TOKEN-004** (Not Started): Smart Contract Integration
 - **TOKEN-005** (Not Started): Transaction Handling
-- **TOKEN-006** (Not Started): Redirect to Token Detail View 
+- **TOKEN-006** (Not Started): Redirect to Token Detail View

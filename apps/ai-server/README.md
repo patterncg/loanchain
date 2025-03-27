@@ -12,7 +12,7 @@ The AI Server component of the LoanChain platform, responsible for enhancing loa
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - PNPM package manager
 - [Ollama](https://ollama.ai/) installed and running locally
 - LLM model (default: llama3) pulled to your Ollama installation
@@ -131,4 +131,4 @@ Takes loan data and returns enhanced data with AI-generated insights.
 To use a different LLM model:
 
 1. Make sure the model is installed in Ollama: `ollama pull <model_name>`
-2. Update the `OLLAMA_MODEL` in your `.env` file 
+2. Update the `OLLAMA_MODEL` in your `.env` file

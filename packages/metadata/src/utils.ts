@@ -23,10 +23,10 @@ export function formatAddress(address: string): string {
  * @param currency Currency symbol
  * @returns Formatted amount string
  */
-export function formatAmount(amount: number, currency: string = '$'): string {
+export function formatAmount(amount: number, currency: string = "$"): string {
   return `${currency}${amount.toLocaleString(undefined, {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   })}`;
 }
 
@@ -38,7 +38,7 @@ export function formatAmount(amount: number, currency: string = '$'): string {
 export function formatInterestRate(rate: number): string {
   return `${rate.toLocaleString(undefined, {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   })}%`;
 }
 
@@ -48,7 +48,7 @@ export function formatInterestRate(rate: number): string {
  * @returns Formatted term string
  */
 export function formatTerm(term: number): string {
-  return term === 1 ? '1 month' : `${term} months`;
+  return term === 1 ? "1 month" : `${term} months`;
 }
 
 /**
@@ -57,11 +57,11 @@ export function formatTerm(term: number): string {
  * @returns Sanitized string
  */
 export function sanitizeInput(input: string): string {
-  if (!input) return '';
-  
+  if (!input) return "";
+
   // Remove HTML tags and limit length
   return input
-    .replace(/<[^>]*>/g, '')
+    .replace(/<[^>]*>/g, "")
     .trim()
     .substring(0, 1000);
 }
@@ -72,10 +72,10 @@ export function sanitizeInput(input: string): string {
  * @returns Buffer
  */
 export function hexToBuffer(hex: string): Buffer {
-  if (hex.startsWith('0x')) {
+  if (hex.startsWith("0x")) {
     hex = hex.substring(2);
   }
-  return Buffer.from(hex, 'hex');
+  return Buffer.from(hex, "hex");
 }
 
 /**
@@ -88,12 +88,12 @@ export function hexToBuffer(hex: string): Buffer {
 export function createLoanSummary(
   purpose: string,
   amount: number,
-  term: number
+  term: number,
 ): string {
   const formattedAmount = formatAmount(amount);
   const formattedTerm = formatTerm(term);
-  
-  return `${formattedAmount} loan for ${purpose || 'general purposes'} over ${formattedTerm}.`;
+
+  return `${formattedAmount} loan for ${purpose || "general purposes"} over ${formattedTerm}.`;
 }
 
 /**
@@ -108,19 +108,19 @@ export function assessRisk(
   loanAmount: number,
   collateralValue: number,
   term: number,
-  creditScore?: number
+  creditScore?: number,
 ): string {
   // Calculate loan-to-value ratio
   const ltv = loanAmount / collateralValue;
-  
+
   // Base risk on LTV
   if (ltv < 0.5) {
-    return creditScore && creditScore > 720 ? 'Very Low Risk' : 'Low Risk';
+    return creditScore && creditScore > 720 ? "Very Low Risk" : "Low Risk";
   } else if (ltv < 0.7) {
-    return creditScore && creditScore > 680 ? 'Low Risk' : 'Medium Risk';
+    return creditScore && creditScore > 680 ? "Low Risk" : "Medium Risk";
   } else if (ltv < 0.85) {
-    return creditScore && creditScore > 720 ? 'Medium Risk' : 'High Risk';
+    return creditScore && creditScore > 720 ? "Medium Risk" : "High Risk";
   } else {
-    return 'Very High Risk';
+    return "Very High Risk";
   }
-} 
+}

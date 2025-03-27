@@ -1,11 +1,11 @@
 // Export main service
-export * from './metadata.service.js';
+export * from "./metadata.service.js";
 
 // Export types
-export * from './types.js';
+export * from "./types.js";
 
 // Export utils
-export * from './utils.js';
+export * from "./utils.js";
 
 // Export schemas
-export * from './schemas/zod.schema.js'; 
+export * from "./schemas/zod.schema.js";

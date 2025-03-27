@@ -1,11 +1,13 @@
-import { z } from 'zod';
-import { LoanStatus } from '../types.js';
+import { z } from "zod";
+import { LoanStatus } from "../types.js";
 
 // Borrower details schema
-export const borrowerDetailsSchema = z.object({
-  name: z.string().optional(),
-  creditScore: z.number().min(300).max(850).optional()
-}).optional();
+export const borrowerDetailsSchema = z
+  .object({
+    name: z.string().optional(),
+    creditScore: z.number().min(300).max(850).optional(),
+  })
+  .optional();
 
 // Loan metadata schema
 export const loanMetadataSchema = z.object({
@@ -25,17 +27,22 @@ export const loanMetadataSchema = z.object({
   status: z.nativeEnum(LoanStatus).optional(),
   dueDate: z.number().optional(),
   metadataUri: z.string().url().optional(),
-  mintTransactionId: z.string().regex(/^0x[a-fA-F0-9]{64}$/).optional(),
+  mintTransactionId: z
+    .string()
+    .regex(/^0x[a-fA-F0-9]{64}$/)
+    .optional(),
   mintBlockNumber: z.number().optional(),
   tags: z.array(z.string()).optional(),
-  schemaVersion: z.string()
+  schemaVersion: z.string(),
 });
 
 // NFT attribute schema
 export const nftAttributeSchema = z.object({
   trait_type: z.string(),
   value: z.union([z.string(), z.number()]),
-  display_type: z.enum(['number', 'date', 'boost_percentage', 'boost_number']).optional()
+  display_type: z
+    .enum(["number", "date", "boost_percentage", "boost_number"])
+    .optional(),
 });
 
 // NFT metadata schema
@@ -46,9 +53,9 @@ export const nftMetadataSchema = z.object({
   external_url: z.string().url().optional(),
   animation_url: z.string().url().optional(),
   attributes: z.array(nftAttributeSchema).optional(),
-  properties: loanMetadataSchema
+  properties: loanMetadataSchema,
 });
 
 // Schema types
 export type LoanMetadataSchemaType = z.infer<typeof loanMetadataSchema>;
-export type NFTMetadataSchemaType = z.infer<typeof nftMetadataSchema>; 
+export type NFTMetadataSchemaType = z.infer<typeof nftMetadataSchema>;

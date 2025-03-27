@@ -34,4 +34,4 @@ export type AiEnhancedLoan = {
     riskScore?: number;
     riskAssessment?: string;
   };
-}; 
+};

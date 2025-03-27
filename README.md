@@ -37,12 +37,14 @@ The application uses [shadcn/ui](https://ui.shadcn.com/) with [Radix UI](https:/
 ### Smart Contract Integration
 
 Smart contract interaction is simplified through the `contract-integration` package, which provides:
+
 - Contract service for minting loan tokens
 - Metadata service for IPFS storage and contract integration
 
 ## Project Simplification
 
 The project has been streamlined for simplicity:
+
 - Using a single UI library (shadcn/ui + Radix)
 - Focused on core functionality (loan creation and viewing)
 - Unnecessary test components removed

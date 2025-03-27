@@ -38,10 +38,7 @@ export function TermsForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Payment Frequency</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select payment frequency" />
@@ -54,7 +51,9 @@ export function TermsForm() {
                   <SelectItem value="monthly">Monthly</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>How often payments will be made.</FormDescription>
+              <FormDescription>
+                How often payments will be made.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -78,7 +77,10 @@ export function TermsForm() {
                     {...field}
                     value={field.value || ""}
                     onChange={(e) => {
-                      const value = e.target.value === "" ? undefined : Number(e.target.value);
+                      const value =
+                        e.target.value === ""
+                          ? undefined
+                          : Number(e.target.value);
                       field.onChange(value);
                     }}
                   />
@@ -113,7 +115,10 @@ export function TermsForm() {
                     {...field}
                     value={field.value || ""}
                     onChange={(e) => {
-                      const value = e.target.value === "" ? undefined : Number(e.target.value);
+                      const value =
+                        e.target.value === ""
+                          ? undefined
+                          : Number(e.target.value);
                       field.onChange(value);
                     }}
                   />
@@ -123,7 +128,8 @@ export function TermsForm() {
                 </div>
               </FormControl>
               <FormDescription>
-                Fee applied for late payments, as a percentage of the payment amount.
+                Fee applied for late payments, as a percentage of the payment
+                amount.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -164,11 +170,10 @@ export function TermsForm() {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  I agree to the Terms and Conditions
-                </FormLabel>
+                <FormLabel>I agree to the Terms and Conditions</FormLabel>
                 <FormDescription>
-                  By checking this box, you confirm that you have read and agree to the loan terms and conditions.
+                  By checking this box, you confirm that you have read and agree
+                  to the loan terms and conditions.
                 </FormDescription>
               </div>
               <FormMessage />
@@ -178,4 +183,4 @@ export function TermsForm() {
       </div>
     </div>
   );
-} 
+}

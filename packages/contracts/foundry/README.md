@@ -47,6 +47,7 @@ forge test -vvv
 To deploy the contracts to Moonbase Alpha (Moonbeam testnet):
 
 1. Create a `.env` file with the following:
+
 ```env
 PRIVATE_KEY=your_private_key
 MOONBASE_RPC_URL=https://rpc.api.moonbase.moonbeam.network
@@ -54,6 +55,7 @@ MOONSCAN_API_KEY=your_moonscan_api_key
 ```
 
 2. Source the environment and deploy:
+
 ```bash
 source .env
 forge script script/DeployLoanToken.s.sol:DeployLoanToken --rpc-url $MOONBASE_RPC_URL --broadcast --verify
@@ -92,4 +94,4 @@ address issuer = loanToken.getTokenIssuer(tokenId);
 
 ## License
 
-The contracts are licensed under the MIT License. 
+The contracts are licensed under the MIT License.

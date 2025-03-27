@@ -1,12 +1,12 @@
-import { NFTStorage, File, Blob } from 'nft.storage';
-import mime from 'mime';
-import { fileTypeFromBuffer } from 'file-type';
-import { 
-  EnhancedLoanData, 
-  IPFSUploadResponse, 
+import { NFTStorage, File, Blob } from "nft.storage";
+import mime from "mime";
+import { fileTypeFromBuffer } from "file-type";
+import {
+  EnhancedLoanData,
+  IPFSUploadResponse,
   IPFSServiceConfig,
-  FileUploadOptions
-} from './types.js';
+  FileUploadOptions,
+} from "./types.js";
 
 /**
  * Service for uploading files and metadata to IPFS using nft.storage
@@ -21,7 +21,9 @@ export class IPFSService {
    */
   constructor(config: IPFSServiceConfig) {
     this.client = new NFTStorage({ token: config.token });
-    this.defaultImagePath = config.defaultImagePath || 'ipfs://bafkreihhxcbeaugnqkoxvhcgk4ri3snyavj3jbsgex7kfgwpthbar7v7mq'; // Default loan token image
+    this.defaultImagePath =
+      config.defaultImagePath ||
+      "ipfs://bafkreihhxcbeaugnqkoxvhcgk4ri3snyavj3jbsgex7kfgwpthbar7v7mq"; // Default loan token image
   }
 
   /**
@@ -39,22 +41,25 @@ export class IPFSService {
 
       const metadata = await this.client.store({
         name: `Loan Token #${id}`,
-        description: data.aiSummary || `Loan for ${data.purpose || 'general purposes'}.`,
+        description:
+          data.aiSummary || `Loan for ${data.purpose || "general purposes"}.`,
         image: imageFile,
         properties: {
           ...data,
-          timestamp
-        }
+          timestamp,
+        },
       });
 
       return {
         url: metadata.url,
         cid: metadata.ipnft,
-        size: 0 // Size information not directly available from nft.storage store method
+        size: 0, // Size information not directly available from nft.storage store method
       };
     } catch (error) {
-      console.error('Error uploading metadata to IPFS:', error);
-      throw new Error(`Failed to upload metadata to IPFS: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error uploading metadata to IPFS:", error);
+      throw new Error(
+        `Failed to upload metadata to IPFS: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -66,7 +71,9 @@ export class IPFSService {
   private async getImageFileFromUrl(url: string): Promise<File> {
     // For simplicity, just create a placeholder file with minimal content
     // In a production app, you would fetch the actual image data
-    return new File([new Uint8Array([1, 2, 3, 4])], 'placeholder.png', { type: 'image/png' });
+    return new File([new Uint8Array([1, 2, 3, 4])], "placeholder.png", {
+      type: "image/png",
+    });
   }
 
   /**
@@ -75,7 +82,10 @@ export class IPFSService {
    * @param options File upload options
    * @returns IPFS upload response including the URL and CID
    */
-  async uploadFile(fileData: Buffer | Uint8Array, options?: FileUploadOptions): Promise<IPFSUploadResponse> {
+  async uploadFile(
+    fileData: Buffer | Uint8Array,
+    options?: FileUploadOptions,
+  ): Promise<IPFSUploadResponse> {
     try {
       let fileName = options?.fileName;
       let contentType = options?.contentType;
@@ -83,12 +93,12 @@ export class IPFSService {
       // Try to detect file type if not provided
       if (!contentType) {
         const fileType = await fileTypeFromBuffer(fileData);
-        contentType = fileType?.mime || 'application/octet-stream';
+        contentType = fileType?.mime || "application/octet-stream";
       }
 
       // Generate a filename if not provided
       if (!fileName) {
-        const extension = mime.getExtension(contentType) || 'bin';
+        const extension = mime.getExtension(contentType) || "bin";
         fileName = `file-${Date.now()}.${extension}`;
       }
 
@@ -97,15 +107,17 @@ export class IPFSService {
 
       // Upload to IPFS
       const cid = await this.client.storeBlob(file);
-      
+
       return {
         url: `ipfs://${cid}`,
         cid,
-        size: fileData.length
+        size: fileData.length,
       };
     } catch (error) {
-      console.error('Error uploading file to IPFS:', error);
-      throw new Error(`Failed to upload file to IPFS: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error uploading file to IPFS:", error);
+      throw new Error(
+        `Failed to upload file to IPFS: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -116,17 +128,21 @@ export class IPFSService {
    */
   async uploadJSON(jsonData: Record<string, any>): Promise<IPFSUploadResponse> {
     try {
-      const blob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(jsonData)], {
+        type: "application/json",
+      });
       const cid = await this.client.storeBlob(blob);
-      
+
       return {
         url: `ipfs://${cid}`,
         cid,
-        size: blob.size
+        size: blob.size,
       };
     } catch (error) {
-      console.error('Error uploading JSON to IPFS:', error);
-      throw new Error(`Failed to upload JSON to IPFS: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error uploading JSON to IPFS:", error);
+      throw new Error(
+        `Failed to upload JSON to IPFS: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -138,13 +154,15 @@ export class IPFSService {
     try {
       // Use a simple request to the NFT.Storage service to check if it's available
       // Instead of using the problematic status method
-      const testBlob = new Blob([JSON.stringify({ test: true })], { type: 'application/json' });
+      const testBlob = new Blob([JSON.stringify({ test: true })], {
+        type: "application/json",
+      });
       const cid = await this.client.storeBlob(testBlob);
-      
-      return !!cid && typeof cid === 'string' && cid.length > 0;
+
+      return !!cid && typeof cid === "string" && cid.length > 0;
     } catch (error) {
-      console.error('Error checking IPFS service status:', error);
+      console.error("Error checking IPFS service status:", error);
       return false;
     }
   }
-} 
+}

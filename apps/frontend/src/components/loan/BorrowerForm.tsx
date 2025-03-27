@@ -20,7 +20,8 @@ export function BorrowerForm() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">Borrower Information</h2>
         <p className="text-muted-foreground">
-          Optional: Provide additional information about the borrower to help with loan assessment.
+          Optional: Provide additional information about the borrower to help
+          with loan assessment.
         </p>
       </div>
 
@@ -81,7 +82,10 @@ export function BorrowerForm() {
                   {...field}
                   value={field.value || ""}
                   onChange={(e) => {
-                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                    const value =
+                      e.target.value === ""
+                        ? undefined
+                        : Number(e.target.value);
                     field.onChange(value);
                   }}
                 />
@@ -106,11 +110,10 @@ export function BorrowerForm() {
                 />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Income Verification Available
-                </FormLabel>
+                <FormLabel>Income Verification Available</FormLabel>
                 <FormDescription>
-                  Check this if you can provide income verification documents if requested.
+                  Check this if you can provide income verification documents if
+                  requested.
                 </FormDescription>
               </div>
             </FormItem>
@@ -132,7 +135,8 @@ export function BorrowerForm() {
                 />
               </FormControl>
               <FormDescription>
-                Any other relevant information about the borrower's financial situation.
+                Any other relevant information about the borrower's financial
+                situation.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -141,4 +145,4 @@ export function BorrowerForm() {
       </div>
     </div>
   );
-} 
+}

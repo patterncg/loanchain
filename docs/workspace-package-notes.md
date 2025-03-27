@@ -14,6 +14,7 @@ The LoanChain project uses a monorepo structure with multiple packages:
 ### Problem
 
 1. ESM vs CommonJS compatibility issues:
+
    - The frontend uses ESM modules
    - Some package dependencies use CommonJS
    - TypeScript's `moduleResolution` settings needed adjustment
@@ -26,12 +27,14 @@ The LoanChain project uses a monorepo structure with multiple packages:
 
 We implemented a pragmatic workaround:
 
-1. **Local Module Approach**: 
+1. **Local Module Approach**:
+
    - Created a local copy of the contract-integration code in the frontend
    - Simplified dependencies and interfaces
    - Removed complex integrations that weren't immediately needed
 
 2. **Interface Isolation**:
+
    - Created simplified versions of shared interfaces
    - Removed unused functionality for MVP development
 
@@ -42,10 +45,12 @@ We implemented a pragmatic workaround:
 ## Future Improvements
 
 1. **Proper Package Structure**:
+
    - Standardize on ESM for all packages
    - Use consistent moduleResolution settings
 
 2. **Build Process**:
+
    - Implement proper build order for dependencies
    - Use bundled packages for distribution
 
@@ -62,4 +67,4 @@ When adding new dependencies between packages:
 3. Consider the implications of circular dependencies
 4. Document any workarounds needed for specific packages
 
-For the current MVP development, prioritize functionality over perfect architecture. We can refactor the package structure once core functionality is working. 
+For the current MVP development, prioritize functionality over perfect architecture. We can refactor the package structure once core functionality is working.

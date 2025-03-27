@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { getLoanSummary } from '../templates/loan-summary.template';
-import { getRiskAssessment } from '../templates/risk-assessment.template';
-import { generateWithLLM } from '../utils/llm.util';
+import { Request, Response } from "express";
+import { getLoanSummary } from "../templates/loan-summary.template";
+import { getRiskAssessment } from "../templates/risk-assessment.template";
+import { generateWithLLM } from "../utils/llm.util";
 
 interface LoanData {
   borrowerName: string;
@@ -21,8 +21,8 @@ export const enhanceLoanController = async (req: Request, res: Response) => {
 
     // Validate the request
     if (!loanData || !loanData.borrowerName || !loanData.loanAmount) {
-      return res.status(400).json({ 
-        error: 'Invalid request. Required fields: borrowerName, loanAmount'
+      return res.status(400).json({
+        error: "Invalid request. Required fields: borrowerName, loanAmount",
       });
     }
 
@@ -39,11 +39,11 @@ export const enhanceLoanController = async (req: Request, res: Response) => {
       original: loanData,
       enhanced: {
         summary: summaryResponse,
-        riskAssessment: riskResponse
-      }
+        riskAssessment: riskResponse,
+      },
     });
   } catch (error) {
-    console.error('Error enhancing loan data:', error);
-    res.status(500).json({ error: 'Failed to enhance loan data' });
+    console.error("Error enhancing loan data:", error);
+    res.status(500).json({ error: "Failed to enhance loan data" });
   }
-}; 
+};

@@ -30,7 +30,7 @@ export function WalletDebugger() {
     providerInfo: {} as Record<string, unknown>,
     error: null as string | null,
   });
-  
+
   const { isConnected, address } = useAccount();
   const { connect, connectors, error: connectError, isPending } = useConnect();
   const { disconnect } = useDisconnect();
@@ -44,11 +44,11 @@ export function WalletDebugger() {
   const detectWallet = () => {
     try {
       const hasProvider = typeof window !== "undefined" && !!window.ethereum;
-      
+
       if (hasProvider && window.ethereum) {
         // Use ethereum provider as typed interface
         const provider = window.ethereum as EthereumProvider;
-        
+
         const providerInfo = {
           isMetaMask: provider.isMetaMask,
           isCoinbaseWallet: provider.isCoinbaseWallet,
@@ -56,10 +56,10 @@ export function WalletDebugger() {
           hasProviders: !!provider.providers,
           providerCount: provider.providers?.length || 0,
           availableMethods: Object.keys(provider).filter(
-            key => typeof provider[key] === 'function'
+            (key) => typeof provider[key] === "function",
           ),
         };
-        
+
         setWalletInfo({
           hasProvider,
           isMetaMask: !!provider.isMetaMask,
@@ -98,7 +98,9 @@ export function WalletDebugger() {
       const provider = window.ethereum as EthereumProvider;
 
       // Request accounts - this will prompt the MetaMask popup
-      const accounts = await provider.request({ method: "eth_requestAccounts" });
+      const accounts = await provider.request({
+        method: "eth_requestAccounts",
+      });
       console.log("Connected accounts:", accounts);
 
       // Try to switch to Moonbase Alpha
@@ -155,13 +157,13 @@ export function WalletDebugger() {
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="font-medium">Provider Available:</div>
             <div>{walletInfo.hasProvider ? "✅ Yes" : "❌ No"}</div>
-            
+
             <div className="font-medium">MetaMask Detected:</div>
             <div>{walletInfo.isMetaMask ? "✅ Yes" : "❌ No"}</div>
-            
+
             <div className="font-medium">Coinbase Wallet Detected:</div>
             <div>{walletInfo.isCoinbase ? "✅ Yes" : "❌ No"}</div>
-            
+
             {walletInfo.error && (
               <>
                 <div className="font-medium text-red-500">Error:</div>
@@ -170,36 +172,40 @@ export function WalletDebugger() {
             )}
           </div>
         </div>
-        
+
         {/* Connection Status */}
         <div className="space-y-3">
           <h3 className="font-medium text-lg">Connection Status</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div className="font-medium">Connected:</div>
             <div>{isConnected ? "✅ Yes" : "❌ No"}</div>
-            
+
             {isConnected && (
               <>
                 <div className="font-medium">Address:</div>
                 <div className="font-mono">{address}</div>
-                
+
                 <div className="font-medium">Chain ID:</div>
                 <div>
-                  {chainId} 
-                  {chainId === 1287 ? " (✅ Moonbase Alpha)" : " (❌ Wrong Network)"}
+                  {chainId}
+                  {chainId === 1287
+                    ? " (✅ Moonbase Alpha)"
+                    : " (❌ Wrong Network)"}
                 </div>
               </>
             )}
-            
+
             {connectError && (
               <>
-                <div className="font-medium text-red-500">Connection Error:</div>
+                <div className="font-medium text-red-500">
+                  Connection Error:
+                </div>
                 <div className="text-red-500">{connectError.message}</div>
               </>
             )}
           </div>
         </div>
-        
+
         {/* Connection Buttons */}
         <div className="space-y-3">
           <h3 className="font-medium text-lg">Connection Actions</h3>
@@ -225,12 +231,14 @@ export function WalletDebugger() {
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Direct Connect Button */}
                   <div className="mt-4 pt-4 border-t space-y-2">
-                    <div className="font-medium">Direct Connect (Bypassing Wagmi):</div>
-                    <Button 
-                      onClick={handleDirectConnect} 
+                    <div className="font-medium">
+                      Direct Connect (Bypassing Wagmi):
+                    </div>
+                    <Button
+                      onClick={handleDirectConnect}
                       disabled={!walletInfo.hasProvider}
                       variant="secondary"
                       size="sm"
@@ -240,14 +248,18 @@ export function WalletDebugger() {
                   </div>
                 </>
               ) : (
-                <Button onClick={() => disconnect()} variant="outline" size="sm">
+                <Button
+                  onClick={() => disconnect()}
+                  variant="outline"
+                  size="sm"
+                >
                   Disconnect
                 </Button>
               )}
             </div>
           </div>
         </div>
-        
+
         {/* Provider Details */}
         <div className="space-y-3">
           <h3 className="font-medium text-lg">Provider Details</h3>
@@ -258,4 +270,4 @@ export function WalletDebugger() {
       </CardContent>
     </Card>
   );
-} 
+}

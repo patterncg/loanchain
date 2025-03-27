@@ -20,64 +20,64 @@ pnpm add @loanchain/storage
 ### Initializing the service
 
 ```typescript
-import { IPFSService } from '@loanchain/storage';
+import { IPFSService } from "@loanchain/storage";
 
 // Create a new instance of the IPFS service
 const ipfsService = new IPFSService({
   token: process.env.NFT_STORAGE_KEY,
-  defaultImagePath: 'ipfs://your-default-image-cid' // Optional
+  defaultImagePath: "ipfs://your-default-image-cid", // Optional
 });
 ```
 
 ### Uploading loan metadata
 
 ```typescript
-import { EnhancedLoanData } from '@loanchain/storage';
+import { EnhancedLoanData } from "@loanchain/storage";
 
 const loanData: EnhancedLoanData = {
   amount: 1000,
   interestRate: 5,
   term: 12,
-  collateralType: 'Real Estate',
+  collateralType: "Real Estate",
   collateralValue: 50000,
-  purpose: 'Home Renovation',
-  aiSummary: 'This is a low-risk loan for home renovation.',
-  riskTag: 'Low Risk'
+  purpose: "Home Renovation",
+  aiSummary: "This is a low-risk loan for home renovation.",
+  riskTag: "Low Risk",
 };
 
 const result = await ipfsService.uploadMetadata(loanData);
-console.log('Metadata URL:', result.url);
-console.log('IPFS CID:', result.cid);
+console.log("Metadata URL:", result.url);
+console.log("IPFS CID:", result.cid);
 ```
 
 ### Uploading a file
 
 ```typescript
-import { readFileSync } from 'fs';
+import { readFileSync } from "fs";
 
 // Upload a file from disk
-const fileData = readFileSync('path/to/file.jpg');
+const fileData = readFileSync("path/to/file.jpg");
 const result = await ipfsService.uploadFile(fileData, {
-  fileName: 'image.jpg',
-  contentType: 'image/jpeg'
+  fileName: "image.jpg",
+  contentType: "image/jpeg",
 });
 
-console.log('File URL:', result.url);
+console.log("File URL:", result.url);
 ```
 
 ### Uploading JSON data
 
 ```typescript
 const jsonData = {
-  key1: 'value1',
-  key2: 'value2',
+  key1: "value1",
+  key2: "value2",
   nested: {
-    key3: 'value3'
-  }
+    key3: "value3",
+  },
 };
 
 const result = await ipfsService.uploadJSON(jsonData);
-console.log('JSON URL:', result.url);
+console.log("JSON URL:", result.url);
 ```
 
 ### Checking service status
@@ -85,9 +85,9 @@ console.log('JSON URL:', result.url);
 ```typescript
 const isOperational = await ipfsService.checkStatus();
 if (isOperational) {
-  console.log('IPFS service is operational');
+  console.log("IPFS service is operational");
 } else {
-  console.log('IPFS service is not operational');
+  console.log("IPFS service is not operational");
 }
 ```
 
@@ -116,4 +116,4 @@ pnpm test
 
 ## License
 
-MIT 
+MIT

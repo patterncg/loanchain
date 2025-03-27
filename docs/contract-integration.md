@@ -39,15 +39,15 @@ The `ContractService` is responsible for direct interaction with the LoanToken s
 
 ```typescript
 const contractService = new ContractService({
-  loanRegistryAddress: '0x1234567890123456789012345678901234567890',
+  loanRegistryAddress: "0x1234567890123456789012345678901234567890",
   chainId: ChainId.MOONBASE_ALPHA,
 });
 
 // Mint a loan token
 const result = await contractService.mintLoanToken(
   userWalletAddress,
-  'ipfs://Qm123456789',
-  loanData
+  "ipfs://Qm123456789",
+  loanData,
 );
 ```
 
@@ -64,7 +64,7 @@ The `MetadataService` combines IPFS storage with contract operations, providing 
 
 ```typescript
 const metadataService = new MetadataService({
-  ipfsGateway: 'https://gateway.pinata.cloud',
+  ipfsGateway: "https://gateway.pinata.cloud",
   pinataApiKey: process.env.PINATA_API_KEY,
   pinataSecretKey: process.env.PINATA_SECRET_KEY,
   contractService,
@@ -73,7 +73,7 @@ const metadataService = new MetadataService({
 // Upload metadata and mint token in one step
 const mintResult = await metadataService.uploadAndMint(
   userWalletAddress,
-  enhancedLoanData
+  enhancedLoanData,
 );
 ```
 
@@ -99,11 +99,12 @@ const {
   error,
   checkMinterRole,
   estimateGasFee,
-  walletAddress
+  walletAddress,
 } = useContractIntegration();
 ```
 
 This hook automatically handles:
+
 - Network switching
 - Service initialization
 - Error handling
@@ -128,4 +129,4 @@ When deploying to a production environment, make sure to:
 1. Update the contract addresses in the configuration for the target network
 2. Set up proper environment variables for IPFS API keys
 3. Configure the network in the frontend to match the deployment target
-4. Test thoroughly on the target network before going live 
+4. Test thoroughly on the target network before going live

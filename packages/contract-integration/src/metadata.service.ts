@@ -1,6 +1,6 @@
-import { IPFSService } from '@loanchain/storage';
-import { EnhancedLoanData } from '@loanchain/storage';
-import { ContractService, MintTransactionResult } from './contract.service.js';
+import { IPFSService } from "@loanchain/storage";
+import { EnhancedLoanData } from "@loanchain/storage";
+import { ContractService, MintTransactionResult } from "./contract.service.js";
 
 export interface MetadataServiceConfig {
   ipfsGateway: string;
@@ -38,8 +38,8 @@ export class MetadataService {
   constructor(config: MetadataServiceConfig) {
     // Create a compatible config for IPFSService
     this.ipfsService = new IPFSService({
-      token: 'dummy-token', // Will be replaced with actual token in a real implementation
-      defaultImagePath: 'ipfs://QmUyLztKNVhGGpKvTx6jDKHUm6hxJE3iLzB7kte1So3VBJ'
+      token: "dummy-token", // Will be replaced with actual token in a real implementation
+      defaultImagePath: "ipfs://QmUyLztKNVhGGpKvTx6jDKHUm6hxJE3iLzB7kte1So3VBJ",
     });
     this.contractService = config.contractService;
   }
@@ -50,37 +50,45 @@ export class MetadataService {
    * @param loanData Enhanced loan data
    * @returns Minting result with token ID, transaction hash, and metadata URI
    */
-  async uploadAndMint(walletAddress: string, loanData: ExtendedLoanData): Promise<MintResult> {
+  async uploadAndMint(
+    walletAddress: string,
+    loanData: ExtendedLoanData,
+  ): Promise<MintResult> {
     try {
       // First, check if the user has the minter role
-      const hasMinterRole = await this.contractService.hasMinterRole(walletAddress);
-      
+      const hasMinterRole =
+        await this.contractService.hasMinterRole(walletAddress);
+
       if (!hasMinterRole) {
-        throw new Error("You don't have permission to mint loan tokens. Please contact the administrator.");
+        throw new Error(
+          "You don't have permission to mint loan tokens. Please contact the administrator.",
+        );
       }
 
       // Step 1: Create and upload the metadata to IPFS
       const metadata = this.constructMetadata(loanData);
       const ipfsResult = await this.ipfsService.uploadJSON(metadata);
-      
+
       if (!ipfsResult.url) {
-        throw new Error('Failed to upload metadata to IPFS');
+        throw new Error("Failed to upload metadata to IPFS");
       }
 
       // Step 2: Mint the token with the metadata URI
       const mintResult = await this.contractService.mintLoanToken(
         walletAddress,
         ipfsResult.url,
-        loanData
+        loanData,
       );
 
       return {
         ...mintResult,
-        metadataUri: ipfsResult.url
+        metadataUri: ipfsResult.url,
       };
     } catch (error) {
-      console.error('Error in uploadAndMint:', error);
-      throw new Error(`Failed to upload and mint: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error in uploadAndMint:", error);
+      throw new Error(
+        `Failed to upload and mint: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -91,7 +99,7 @@ export class MetadataService {
    */
   private constructMetadata(loanData: ExtendedLoanData): Record<string, any> {
     const currentDate = new Date().toISOString();
-    
+
     return {
       name: `Loan Token: ${loanData.purpose}`,
       description: `Loan request for ${loanData.amount} with ${loanData.term} month term. Purpose: ${loanData.purpose}`,
@@ -102,33 +110,33 @@ export class MetadataService {
       attributes: [
         {
           trait_type: "Amount",
-          value: loanData.amount
+          value: loanData.amount,
         },
         {
           trait_type: "Term",
-          value: loanData.term
+          value: loanData.term,
         },
         {
           trait_type: "Purpose",
-          value: loanData.purpose
+          value: loanData.purpose,
         },
         {
           trait_type: "Interest Rate",
-          value: loanData.interestRate
+          value: loanData.interestRate,
         },
         {
           trait_type: "Risk Score",
-          value: loanData.aiEnhanced?.riskScore || "Unknown"
+          value: loanData.aiEnhanced?.riskScore || "Unknown",
         },
         {
           trait_type: "Borrower Type",
-          value: loanData.borrowerType || "Unknown"
+          value: loanData.borrowerType || "Unknown",
         },
         {
-          display_type: "date", 
-          trait_type: "Created Date", 
-          value: Math.floor(Date.now() / 1000)
-        }
+          display_type: "date",
+          trait_type: "Created Date",
+          value: Math.floor(Date.now() / 1000),
+        },
       ],
       properties: {
         loan_details: {
@@ -137,19 +145,21 @@ export class MetadataService {
           purpose: loanData.purpose,
           interest_rate: loanData.interestRate,
           borrower_type: loanData.borrowerType || "Unknown",
-          collateral: loanData.collateral || "None"
+          collateral: loanData.collateral || "None",
         },
         borrower_info: {
           income: loanData.income || 0,
           expenses: loanData.expenses || 0,
-          credit_score: loanData.creditScore || 0
+          credit_score: loanData.creditScore || 0,
         },
-        ai_assessment: loanData.aiEnhanced ? {
-          risk_score: loanData.aiEnhanced.riskScore || "Unknown",
-          risk_factors: loanData.aiEnhanced.riskFactors || [],
-          recommendations: loanData.aiEnhanced.recommendations || []
-        } : null
-      }
+        ai_assessment: loanData.aiEnhanced
+          ? {
+              risk_score: loanData.aiEnhanced.riskScore || "Unknown",
+              risk_factors: loanData.aiEnhanced.riskFactors || [],
+              recommendations: loanData.aiEnhanced.recommendations || [],
+            }
+          : null,
+      },
     };
   }
 
@@ -172,7 +182,7 @@ export class MetadataService {
   async getUserLoans(walletAddress: string): Promise<string[]> {
     return this.contractService.getLoansByOwner(walletAddress);
   }
-  
+
   /**
    * Get active loans from the contract
    * @returns Array of token IDs
@@ -180,4 +190,4 @@ export class MetadataService {
   async getActiveLoans(): Promise<string[]> {
     return this.contractService.getActiveLoans();
   }
-} 
+}

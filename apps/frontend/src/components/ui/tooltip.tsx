@@ -9,16 +9,16 @@ interface TooltipProps {
   align?: "start" | "center" | "end";
 }
 
-export function Tooltip({ 
-  children, 
-  content, 
-  side = "top", 
-  align = "center" 
+export function Tooltip({
+  children,
+  content,
+  side = "top",
+  align = "center",
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   return (
-    <div 
+    <div
       className="relative inline-block"
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
@@ -27,7 +27,7 @@ export function Tooltip({
     >
       {children}
       {isVisible && (
-        <div 
+        <div
           className={cn(
             "absolute z-50 p-2 text-sm rounded-md shadow-md bg-secondary text-secondary-foreground",
             "animate-in fade-in-0 zoom-in-95",
@@ -38,13 +38,19 @@ export function Tooltip({
               "top-0 right-full mr-2": side === "left",
             },
             {
-              "left-1/2 -translate-x-1/2": align === "center" && (side === "top" || side === "bottom"),
-              "top-1/2 -translate-y-1/2": align === "center" && (side === "left" || side === "right"),
-              "left-0": align === "start" && (side === "top" || side === "bottom"),
-              "top-0": align === "start" && (side === "left" || side === "right"),
-              "right-0": align === "end" && (side === "top" || side === "bottom"),
-              "bottom-0": align === "end" && (side === "left" || side === "right"),
-            }
+              "left-1/2 -translate-x-1/2":
+                align === "center" && (side === "top" || side === "bottom"),
+              "top-1/2 -translate-y-1/2":
+                align === "center" && (side === "left" || side === "right"),
+              "left-0":
+                align === "start" && (side === "top" || side === "bottom"),
+              "top-0":
+                align === "start" && (side === "left" || side === "right"),
+              "right-0":
+                align === "end" && (side === "top" || side === "bottom"),
+              "bottom-0":
+                align === "end" && (side === "left" || side === "right"),
+            },
           )}
         >
           {content}
@@ -57,10 +63,16 @@ export function Tooltip({
 export { Tooltip as TooltipProvider, Tooltip as TooltipRoot };
 
 // For compatibility with existing code
-export const TooltipTrigger: React.FC<React.ComponentProps<"div">> = ({ children, ...props }) => {
+export const TooltipTrigger: React.FC<React.ComponentProps<"div">> = ({
+  children,
+  ...props
+}) => {
   return <div {...props}>{children}</div>;
 };
 
-export const TooltipContent: React.FC<React.ComponentProps<"div">> = ({ children, ...props }) => {
+export const TooltipContent: React.FC<React.ComponentProps<"div">> = ({
+  children,
+  ...props
+}) => {
   return <div {...props}>{children}</div>;
-}; 
+};

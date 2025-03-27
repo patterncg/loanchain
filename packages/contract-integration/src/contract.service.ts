@@ -1,7 +1,11 @@
-import { getPublicClient, getWalletClient, waitForTransaction } from 'wagmi/actions';
-import { LoanTokenABI } from './abis/LoanToken.js';
-import { EnhancedLoanData } from '@loanchain/storage';
-import { parseEther } from 'viem';
+import {
+  getPublicClient,
+  getWalletClient,
+  waitForTransaction,
+} from "wagmi/actions";
+import { LoanTokenABI } from "./abis/LoanToken.js";
+import { EnhancedLoanData } from "@loanchain/storage";
+import { parseEther } from "viem";
 
 export interface ContractServiceConfig {
   loanRegistryAddress: string;
@@ -31,54 +35,57 @@ export class ContractService {
   async mintLoanToken(
     address: string,
     metadataURI: string,
-    loanData: EnhancedLoanData
+    loanData: EnhancedLoanData,
   ): Promise<MintTransactionResult> {
     try {
       // Get the wallet client for the connected user
-      const walletClient = await getWalletClient({ 
-        chainId: this.config.chainId
+      const walletClient = await getWalletClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!walletClient) {
-        throw new Error('No wallet client available. Please connect your wallet.');
+        throw new Error(
+          "No wallet client available. Please connect your wallet.",
+        );
       }
 
       // Prepare parameters for the mintLoanToken function
       const amount = parseEther(loanData.amount.toString());
-      
+
       // Calculate due date based on term (months from now)
       const now = Math.floor(Date.now() / 1000); // Current time in seconds
       const secondsInMonth = 30 * 24 * 60 * 60; // Approximate seconds in a month
-      const dueDate = now + (loanData.term * secondsInMonth);
-      
+      const dueDate = now + loanData.term * secondsInMonth;
+
       // Use the loan terms document URL if available, or create a placeholder
-      const loanTermsHash = (loanData as any).loanTermsDocumentUrl || 'ipfs://no-terms-document';
+      const loanTermsHash =
+        (loanData as any).loanTermsDocumentUrl || "ipfs://no-terms-document";
 
       // Call the smart contract to mint the loan token
       const hash = await walletClient.writeContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'mintLoanToken',
+        functionName: "mintLoanToken",
         args: [
           address as `0x${string}`,
           metadataURI,
           amount,
           BigInt(dueDate),
-          loanTermsHash
+          loanTermsHash,
         ],
         // Add chain property to fix TypeScript error
-        chain: null
+        chain: null,
       } as any);
 
       // Wait for the transaction to be mined
-      const publicClient = getPublicClient({ 
-        chainId: this.config.chainId
+      const publicClient = getPublicClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!publicClient) {
-        throw new Error('No public client available');
+        throw new Error("No public client available");
       }
-      
+
       // Wait for the transaction receipt
       const receipt = await publicClient.waitForTransactionReceipt({
         hash,
@@ -91,28 +98,34 @@ export class ContractService {
       });
 
       // Get the event log from the receipt
-      const events = receipt.logs.map((log: any) => {
-        try {
-          return loanTokenInterface.interface.parseLog(log);
-        } catch (e) {
-          return null;
-        }
-      }).filter(Boolean);
+      const events = receipt.logs
+        .map((log: any) => {
+          try {
+            return loanTokenInterface.interface.parseLog(log);
+          } catch (e) {
+            return null;
+          }
+        })
+        .filter(Boolean);
 
       // Find the LoanTokenMinted event
-      const mintEvent = events.find((event: any) => event?.name === 'LoanTokenMinted');
-      
+      const mintEvent = events.find(
+        (event: any) => event?.name === "LoanTokenMinted",
+      );
+
       // Extract the token ID from the event
-      const tokenId = mintEvent?.args?.tokenId?.toString() || '0';
-      
+      const tokenId = mintEvent?.args?.tokenId?.toString() || "0";
+
       return {
         tokenId,
         transactionHash: hash,
-        blockNumber: Number(receipt.blockNumber)
+        blockNumber: Number(receipt.blockNumber),
       };
     } catch (error) {
-      console.error('Error minting loan token:', error);
-      throw new Error(`Failed to mint loan token: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error minting loan token:", error);
+      throw new Error(
+        `Failed to mint loan token: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -123,25 +136,27 @@ export class ContractService {
    */
   async getLoanMetadata(tokenId: string) {
     try {
-      const publicClient = getPublicClient({ 
-        chainId: this.config.chainId
+      const publicClient = getPublicClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!publicClient) {
-        throw new Error('No public client available');
+        throw new Error("No public client available");
       }
-      
+
       const result = await publicClient.readContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'getLoanMetadata',
-        args: [BigInt(tokenId)]
+        functionName: "getLoanMetadata",
+        args: [BigInt(tokenId)],
       });
-      
+
       return result;
     } catch (error) {
-      console.error('Error getting loan metadata:', error);
-      throw new Error(`Failed to get loan metadata: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error getting loan metadata:", error);
+      throw new Error(
+        `Failed to get loan metadata: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -152,33 +167,33 @@ export class ContractService {
    */
   async hasMinterRole(address: string): Promise<boolean> {
     try {
-      const publicClient = getPublicClient({ 
-        chainId: this.config.chainId
+      const publicClient = getPublicClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!publicClient) {
-        throw new Error('No public client available');
+        throw new Error("No public client available");
       }
-      
+
       // Get the MINTER_ROLE bytes32 value
       const minterRole = await publicClient.readContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'MINTER_ROLE',
-        args: []
+        functionName: "MINTER_ROLE",
+        args: [],
       });
-      
+
       // Check if the user has the role
       const hasRole = await publicClient.readContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'hasRole',
-        args: [minterRole, address as `0x${string}`]
+        functionName: "hasRole",
+        args: [minterRole, address as `0x${string}`],
       });
-      
+
       return hasRole as boolean;
     } catch (error) {
-      console.error('Error checking minter role:', error);
+      console.error("Error checking minter role:", error);
       return false;
     }
   }
@@ -189,25 +204,27 @@ export class ContractService {
    */
   async getActiveLoans(): Promise<string[]> {
     try {
-      const publicClient = getPublicClient({ 
-        chainId: this.config.chainId
+      const publicClient = getPublicClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!publicClient) {
-        throw new Error('No public client available');
+        throw new Error("No public client available");
       }
-      
+
       const result = await publicClient.readContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'getActiveLoans',
-        args: []
+        functionName: "getActiveLoans",
+        args: [],
       });
-      
-      return (result as bigint[]).map(id => id.toString());
+
+      return (result as bigint[]).map((id) => id.toString());
     } catch (error) {
-      console.error('Error getting active loans:', error);
-      throw new Error(`Failed to get active loans: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error getting active loans:", error);
+      throw new Error(
+        `Failed to get active loans: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -218,25 +235,27 @@ export class ContractService {
    */
   async getLoansByOwner(owner: string): Promise<string[]> {
     try {
-      const publicClient = getPublicClient({ 
-        chainId: this.config.chainId
+      const publicClient = getPublicClient({
+        chainId: this.config.chainId,
       } as any);
-      
+
       if (!publicClient) {
-        throw new Error('No public client available');
+        throw new Error("No public client available");
       }
-      
+
       const result = await publicClient.readContract({
         address: this.config.loanRegistryAddress as `0x${string}`,
         abi: LoanTokenABI,
-        functionName: 'getLoanTokensByOwner',
-        args: [owner as `0x${string}`]
+        functionName: "getLoanTokensByOwner",
+        args: [owner as `0x${string}`],
       });
-      
-      return (result as bigint[]).map(id => id.toString());
+
+      return (result as bigint[]).map((id) => id.toString());
     } catch (error) {
-      console.error('Error getting loans by owner:', error);
-      throw new Error(`Failed to get loans by owner: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error getting loans by owner:", error);
+      throw new Error(
+        `Failed to get loans by owner: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
-} 
+}

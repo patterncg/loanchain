@@ -1,5 +1,5 @@
-import { EnhancedLoanData, MetadataServiceConfig } from './types';
-import { ContractService, MintTransactionResult } from './contract.service';
+import { EnhancedLoanData, MetadataServiceConfig } from "./types";
+import { ContractService, MintTransactionResult } from "./contract.service";
 
 /**
  * Result of a mint operation including metadata URI
@@ -34,26 +34,31 @@ export class MetadataService {
    * @param loanData Enhanced loan data
    * @returns Result of the mint operation
    */
-  async uploadAndMint(walletAddress: string, loanData: EnhancedLoanData): Promise<MintResult> {
+  async uploadAndMint(
+    walletAddress: string,
+    loanData: EnhancedLoanData,
+  ): Promise<MintResult> {
     try {
       // Generate a placeholder metadata URI for now
       // In a real implementation, this would upload to IPFS first
       const metadataUri = `ipfs://placeholder/${Date.now()}`;
-      
+
       // Mint the token using the contract service
       const mintResult = await this.contractService.mintLoanToken(
         walletAddress,
         metadataUri,
-        loanData
+        loanData,
       );
-      
+
       return {
         ...mintResult,
-        metadataUri
+        metadataUri,
       };
     } catch (error) {
-      console.error('Error in uploadAndMint:', error);
-      throw new Error(`Failed to upload and mint: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Error in uploadAndMint:", error);
+      throw new Error(
+        `Failed to upload and mint: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -84,4 +89,4 @@ export class MetadataService {
   async getActiveLoans(): Promise<string[]> {
     return this.contractService.getActiveLoans();
   }
-} 
+}

@@ -27,26 +27,30 @@ export function getLoanSummary(loanData: LoanData): string {
   } = loanData;
 
   // Format monetary values
-  const formattedAmount = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  const formattedAmount = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
   }).format(loanAmount);
 
   // Format interest rate
   const formattedRate = `${interestRate}%`;
 
   // Create a collateral description if provided
-  const collateralDescription = collateralType && collateralValue
-    ? `This loan is secured by ${collateralType} valued at ${new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(collateralValue)}.`
-    : 'This is an unsecured loan.';
+  const collateralDescription =
+    collateralType && collateralValue
+      ? `This loan is secured by ${collateralType} valued at ${new Intl.NumberFormat(
+          "en-US",
+          {
+            style: "currency",
+            currency: "USD",
+          },
+        ).format(collateralValue)}.`
+      : "This is an unsecured loan.";
 
   // Create a purpose description if provided
   const purposeDescription = purpose
     ? `The purpose of this loan is for: ${purpose}.`
-    : '';
+    : "";
 
   // Build the prompt
   return `
@@ -62,4 +66,4 @@ LOAN DETAILS:
 
 Your summary should be professional, clear, and highlight the key terms of the loan in a way that would be helpful for both the lender and borrower. Keep the summary to 2-3 sentences maximum.
 `;
-} 
+}

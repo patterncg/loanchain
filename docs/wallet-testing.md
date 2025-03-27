@@ -51,6 +51,7 @@ If you're already connected to MetaMask (showing "✅ Yes" for "Connected to Met
 Once wallet connection is working properly:
 
 1. Go through the loan creation wizard steps:
+
    - Fill in loan details (amount, interest rate, term, purpose, etc.)
    - Add borrower information
    - Define loan terms
@@ -75,20 +76,24 @@ Once wallet connection is working properly:
 
 ### 6. Common Issues & Troubleshooting
 
-- **MetaMask not detected**: 
+- **MetaMask not detected**:
+
   - Check if MetaMask is installed and unlocked
   - Reload the page with MetaMask unlocked
   - Check browser console for errors related to wallet providers
 
 - **Connected to MetaMask but not to application**:
+
   - Use the Connection Helper's "Sync Connection with App" button
   - If that doesn't work, try disconnecting from the site in MetaMask and reconnecting
 
 - **Connection Request Not Appearing**:
+
   - Check if MetaMask notifications are blocked in your browser
   - Try clicking the MetaMask icon in your browser extensions
 
 - **Network Switching Issues**:
+
   - Check if you can manually add Moonbase Alpha in MetaMask
   - Network details:
     - Network Name: Moonbase Alpha
@@ -97,6 +102,7 @@ Once wallet connection is working properly:
     - Currency Symbol: DEV
 
 - **WagmiProvider Errors in Console**:
+
   - If you see errors like `useConfig must be used within WagmiProvider`, this indicates a React component hierarchy issue
   - All components using wagmi hooks must be children of the WagmiProvider component
   - The application has been structured to ensure proper provider ordering with wagmi hooks used only within AppContent which is wrapped by WagmiProvider
@@ -111,10 +117,12 @@ Once wallet connection is working properly:
 The wallet connection system uses a layered approach:
 
 1. **Base Provider Detection**:
+
    - Direct interaction with `window.ethereum` object to detect connection status
    - Used in the Connection Helper to provide accurate connection information
 
 2. **Wagmi Integration Layer**:
+
    - All wagmi hooks must be used within the WagmiProvider context
    - The application uses a structured component hierarchy to ensure proper context nesting
    - Component order: `App > WagmiProvider > AppContent > [Components using wagmi hooks]`
@@ -131,4 +139,4 @@ When reporting wallet connection issues, please include:
 2. MetaMask version
 3. Steps to reproduce the issue
 4. Error messages (if any) from the Connection Helper
-5. Console logs (if technical) 
+5. Console logs (if technical)

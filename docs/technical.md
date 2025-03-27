@@ -37,7 +37,7 @@ export const LoanForm: React.FC = () => {
   const { write } = useContractWrite({
     address: LOAN_REGISTRY_ADDRESS,
     abi: LOAN_REGISTRY_ABI,
-    functionName: 'mintLoanToken'
+    functionName: "mintLoanToken",
   });
 
   const handleSubmit = async (data: LoanFormData) => {
@@ -90,7 +90,7 @@ contract LoanRegistry is ERC721, Ownable {
 export class LoanEnhancementService {
   constructor(
     private readonly llmService: LocalLLMService,
-    private readonly openAiService: OpenAIService
+    private readonly openAiService: OpenAIService,
   ) {}
 
   async enhanceLoan(loanData: LoanData): Promise<EnhancedLoanData> {
@@ -111,16 +111,16 @@ export class LoanEnhancementService {
 export class TokenService {
   constructor(
     private readonly ipfsService: IPFSService,
-    private readonly contractService: ContractService
+    private readonly contractService: ContractService,
   ) {}
 
   async mintLoanToken(
     loanData: EnhancedLoanData,
-    address: string
+    address: string,
   ): Promise<string> {
     // Upload metadata to IPFS
     const metadataURI = await this.ipfsService.uploadMetadata(loanData);
-    
+
     // Mint token
     return await this.contractService.mintToken(address, metadataURI, loanData);
   }
@@ -147,8 +147,8 @@ export class IPFSService {
       image: "ipfs://...", // Default loan token image
       properties: {
         ...data,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     });
     return metadata.url;
   }
@@ -192,17 +192,17 @@ pnpm test
 
 ```typescript
 // test/LoanRegistry.test.ts
-describe("LoanRegistry", function() {
+describe("LoanRegistry", function () {
   let loanRegistry: LoanRegistry;
   let owner: SignerWithAddress;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     [owner] = await ethers.getSigners();
     const LoanRegistry = await ethers.getContractFactory("LoanRegistry");
     loanRegistry = await LoanRegistry.deploy();
   });
 
-  it("Should mint a new loan token", async function() {
+  it("Should mint a new loan token", async function () {
     // Test implementation
   });
 });
@@ -226,12 +226,14 @@ describe("LoanRegistry", function() {
 ## Security Considerations
 
 1. **Smart Contract Security**
+
    - Comprehensive testing with Foundry
    - External audit requirements
    - Access control implementation
    - Gas optimization
 
 2. **AI Integration Security**
+
    - Input validation and sanitization
    - Rate limiting
    - Error handling and fallback mechanisms
@@ -244,11 +246,13 @@ describe("LoanRegistry", function() {
 ## Future Considerations
 
 1. **Scalability**
+
    - Layer 2 integration options
    - Cross-chain compatibility
    - Gas optimization strategies
 
 2. **Feature Expansion**
+
    - Secondary market for loan tokens
    - DAO governance implementation
    - Advanced risk assessment models
@@ -266,18 +270,8 @@ describe("LoanRegistry", function() {
 # vercel.json
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "apps/frontend/package.json",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "apps/frontend/$1"
-    }
-  ]
+  "builds": [{ "src": "apps/frontend/package.json", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "apps/frontend/$1" }],
 }
 ```
 

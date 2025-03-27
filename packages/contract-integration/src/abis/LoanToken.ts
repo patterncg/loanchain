@@ -606,7 +606,11 @@ export const LoanTokenABI = [
   {
     inputs: [
       { internalType: "uint256", name: "tokenId", type: "uint256" },
-      { internalType: "enum LoanToken.LoanStatus", name: "newStatus", type: "uint8" },
+      {
+        internalType: "enum LoanToken.LoanStatus",
+        name: "newStatus",
+        type: "uint8",
+      },
     ],
     name: "updateLoanStatus",
     outputs: [],
@@ -633,4 +637,4 @@ export const LoanTokenABI = [
     stateMutability: "nonpayable",
     type: "function",
   },
-] as const; 
+] as const;

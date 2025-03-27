@@ -6,13 +6,13 @@ export const AI_API_BASE_URL = "http://localhost:3001/api";
 
 /**
  * Enhanced Loan API
- * 
+ *
  * Services to interact with the AI loan enhancement service
  */
 export const loanApi = {
   /**
    * Enhance loan data with AI-powered insights
-   * 
+   *
    * @param loanData The loan form data to be enhanced
    * @returns Promise with enhanced loan data
    */
@@ -26,13 +26,13 @@ export const loanApi = {
       //   },
       //   body: JSON.stringify(loanData),
       // });
-      
+
       // if (!response.ok) {
       //   throw new Error(`API error: ${response.status}`);
       // }
-      
+
       // return await response.json();
-      
+
       // Simulated response for now (since we don't have a real AI server yet)
       return mockEnhanceLoanResponse(loanData);
     } catch (error) {
@@ -49,17 +49,17 @@ function mockEnhanceLoanResponse(loanData: LoanForm): AiEnhancedLoan {
   // Calculate a sample risk score based on loan amount and interest rate
   const amount = loanData.loanDetails.amount;
   const interestRate = loanData.loanDetails.interestRate;
-  
+
   // Simple algorithm for mock risk score (0-100)
   const riskScore = Math.min(
     Math.round(
-      (amount > 10000 ? 50 : 30) + 
-      (interestRate < 5 ? 20 : 0) - 
-      (amount < 5000 ? 15 : 0)
-    ), 
-    100
+      (amount > 10000 ? 50 : 30) +
+        (interestRate < 5 ? 20 : 0) -
+        (amount < 5000 ? 15 : 0),
+    ),
+    100,
   );
-  
+
   // Risk assessment based on score
   let riskAssessment = "Low Risk";
   if (riskScore > 70) {
@@ -67,12 +67,12 @@ function mockEnhanceLoanResponse(loanData: LoanForm): AiEnhancedLoan {
   } else if (riskScore > 40) {
     riskAssessment = "Medium Risk";
   }
-  
+
   return {
     original: loanData,
     enhanced: {
       riskScore,
-      riskAssessment
-    }
+      riskAssessment,
+    },
   };
-} 
+}

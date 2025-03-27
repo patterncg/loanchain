@@ -1,7 +1,7 @@
-import Ajv from 'ajv';
-import addFormats from 'ajv-formats';
-import { v4 as uuidv4 } from 'uuid';
-import { EnhancedLoanData } from '@loanchain/storage';
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+import { v4 as uuidv4 } from "uuid";
+import { EnhancedLoanData } from "@loanchain/storage";
 import {
   LoanMetadata,
   NFTMetadata,
@@ -9,30 +9,31 @@ import {
   MetadataServiceConfig,
   CreateMetadataOptions,
   ValidationResult,
-  LoanStatus
-} from './types.js';
-import { nftMetadataSchema, loanMetadataSchema } from './schemas/zod.schema.js';
+  LoanStatus,
+} from "./types.js";
+import { nftMetadataSchema, loanMetadataSchema } from "./schemas/zod.schema.js";
 // Import the JSON schema directly instead of using import syntax for JSON
 const metadataSchema = {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "NFT Metadata",
-  "type": "object",
-  "required": ["name", "description", "image", "properties"],
-  "properties": {
-    "name": { "type": "string" },
-    "description": { "type": "string" },
-    "image": { "type": "string", "format": "uri" },
-    "properties": { "type": "object" }
-  }
+  $schema: "http://json-schema.org/draft-07/schema#",
+  title: "NFT Metadata",
+  type: "object",
+  required: ["name", "description", "image", "properties"],
+  properties: {
+    name: { type: "string" },
+    description: { type: "string" },
+    image: { type: "string", format: "uri" },
+    properties: { type: "object" },
+  },
 };
 
 /**
  * Default values for the metadata service
  */
 const DEFAULT_CONFIG: Required<MetadataServiceConfig> = {
-  defaultImageUrl: 'ipfs://bafkreihhxcbeaugnqkoxvhcgk4ri3snyavj3jbsgex7kfgwpthbar7v7mq',
-  baseExternalUrl: 'https://app.loanchain.example/loans/',
-  schemaVersion: '1.0.0'
+  defaultImageUrl:
+    "ipfs://bafkreihhxcbeaugnqkoxvhcgk4ri3snyavj3jbsgex7kfgwpthbar7v7mq",
+  baseExternalUrl: "https://app.loanchain.example/loans/",
+  schemaVersion: "1.0.0",
 };
 
 /**
@@ -49,7 +50,7 @@ export class MetadataService {
   constructor(config?: MetadataServiceConfig) {
     this.config = {
       ...DEFAULT_CONFIG,
-      ...config
+      ...config,
     };
 
     // Initialize AJV validator - fix the initialization to use default import properly
@@ -67,16 +68,17 @@ export class MetadataService {
    */
   public createMetadata(
     loanData: EnhancedLoanData,
-    options: CreateMetadataOptions = {}
+    options: CreateMetadataOptions = {},
   ): NFTMetadata {
     const { includeAttributes = true, generateId = true } = options;
 
     // Generate an ID if not provided and requested
-    const id = loanData.id ? String(loanData.id) : (generateId ? uuidv4() : '');
-    
+    const id = loanData.id ? String(loanData.id) : generateId ? uuidv4() : "";
+
     // Ensure required fields
     const timestamp = loanData.timestamp || Date.now();
-    const issuer = loanData.issuer || '0x0000000000000000000000000000000000000000';
+    const issuer =
+      loanData.issuer || "0x0000000000000000000000000000000000000000";
 
     // Create the loan metadata
     const loanMetadata: LoanMetadata = {
@@ -85,17 +87,18 @@ export class MetadataService {
       issuer,
       timestamp,
       schemaVersion: this.config.schemaVersion,
-      status: (loanData as any).status as LoanStatus || LoanStatus.Active // Type assertion to avoid property error
+      status: ((loanData as any).status as LoanStatus) || LoanStatus.Active, // Type assertion to avoid property error
     };
 
     // Create the NFT metadata
     const nftMetadata: NFTMetadata = {
       name: `Loan Token #${id}`,
-      description: loanData.aiSummary || 
-        `Loan for ${loanData.purpose || 'general purposes'}.`,
+      description:
+        loanData.aiSummary ||
+        `Loan for ${loanData.purpose || "general purposes"}.`,
       image: this.config.defaultImageUrl,
       external_url: `${this.config.baseExternalUrl}${id}`,
-      properties: loanMetadata
+      properties: loanMetadata,
     };
 
     // Add attributes if requested
@@ -117,7 +120,7 @@ export class MetadataService {
 
     return {
       valid: !!valid,
-      errors: validate.errors || undefined
+      errors: validate.errors || undefined,
     };
   }
 
@@ -133,7 +136,7 @@ export class MetadataService {
     } catch (error) {
       return {
         valid: false,
-        errors: error instanceof Error ? [error] : ['Unknown validation error']
+        errors: error instanceof Error ? [error] : ["Unknown validation error"],
       };
     }
   }
@@ -150,7 +153,7 @@ export class MetadataService {
     } catch (error) {
       return {
         valid: false,
-        errors: error instanceof Error ? [error] : ['Unknown validation error']
+        errors: error instanceof Error ? [error] : ["Unknown validation error"],
       };
     }
   }
@@ -161,16 +164,19 @@ export class MetadataService {
    * @param newData The new loan data to apply
    * @returns The updated metadata
    */
-  public updateMetadata(existingMetadata: NFTMetadata, newData: Partial<LoanMetadata>): NFTMetadata {
+  public updateMetadata(
+    existingMetadata: NFTMetadata,
+    newData: Partial<LoanMetadata>,
+  ): NFTMetadata {
     const updatedProperties = {
       ...existingMetadata.properties,
       ...newData,
-      timestamp: Date.now() // Update timestamp
+      timestamp: Date.now(), // Update timestamp
     };
 
     const updatedMetadata: NFTMetadata = {
       ...existingMetadata,
-      properties: updatedProperties
+      properties: updatedProperties,
     };
 
     // Update description if AI summary changed
@@ -194,60 +200,60 @@ export class MetadataService {
   private generateAttributes(metadata: LoanMetadata): NFTAttribute[] {
     const attributes: NFTAttribute[] = [
       {
-        trait_type: 'Amount',
+        trait_type: "Amount",
         value: metadata.amount,
-        display_type: 'number'
+        display_type: "number",
       },
       {
-        trait_type: 'Interest Rate',
+        trait_type: "Interest Rate",
         value: metadata.interestRate,
-        display_type: 'number'
+        display_type: "number",
       },
       {
-        trait_type: 'Term',
+        trait_type: "Term",
         value: metadata.term,
-        display_type: 'number'
+        display_type: "number",
       },
       {
-        trait_type: 'Purpose',
-        value: metadata.purpose || 'General'
-      }
+        trait_type: "Purpose",
+        value: metadata.purpose || "General",
+      },
     ];
 
     // Add risk tag if available
     if (metadata.riskTag) {
       attributes.push({
-        trait_type: 'Risk',
-        value: metadata.riskTag
+        trait_type: "Risk",
+        value: metadata.riskTag,
       });
     }
 
     // Add loan status if available
     if (metadata.status) {
       attributes.push({
-        trait_type: 'Status',
-        value: metadata.status
+        trait_type: "Status",
+        value: metadata.status,
       });
     }
 
     // Add due date if available
     if (metadata.dueDate) {
       attributes.push({
-        trait_type: 'Due Date',
+        trait_type: "Due Date",
         value: metadata.dueDate,
-        display_type: 'date'
+        display_type: "date",
       });
     }
 
     // Add credit score if available
     if (metadata.borrowerDetails?.creditScore) {
       attributes.push({
-        trait_type: 'Credit Score',
+        trait_type: "Credit Score",
         value: metadata.borrowerDetails.creditScore,
-        display_type: 'number'
+        display_type: "number",
       });
     }
 
     return attributes;
   }
-} 
+}

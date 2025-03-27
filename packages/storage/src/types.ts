@@ -8,7 +8,7 @@ export interface EnhancedLoanData {
   term: number;
   issuer?: string;
   timestamp?: number;
-  
+
   // Optional fields that may be used in some cases but aren't required
   purpose?: string;
   collateralType?: string;
@@ -44,4 +44,4 @@ export interface IPFSServiceConfig {
 export interface FileUploadOptions {
   fileName?: string;
   contentType?: string;
-} 
+}
