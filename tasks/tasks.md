@@ -320,7 +320,7 @@ Dependencies: None
 
 ## TEST-001: Smart Contract Tests with Foundry
 
-Status: Not Started
+Status: In Progress
 Priority: High
 Dependencies: DEPLOY-001
 
@@ -339,6 +339,16 @@ Dependencies: DEPLOY-001
 
 - Use Foundry for writing and running smart contract tests
 - Follow testing guidelines from technical.md
+
+### Implementation Progress
+
+- [x] Set up Foundry testing environment
+- [x] Fix existing contract tests
+- [x] Add extended test cases (26 total tests passing)
+- [x] Test role management and permissions
+- [x] Test loan lifecycle and status transitions
+- [x] Add transaction and gas usage tests
+- [ ] Add integration tests with frontend components
 
 ---
 
@@ -520,10 +530,14 @@ Dependencies: None
    - ⏳ Deploy contracts to Moonbase Alpha testnet
    - ⏳ Document contract addresses and deployment process
 
-3. **Start Smart Contract Tests (TEST-001)**
-   - Set up Foundry testing environment
-   - Write basic tests for core contract functions
-   - Focus on testing loan creation, retrieval, and status updates
+3. **Smart Contract Tests (TEST-001)**
+   - ✅ Set up Foundry testing environment
+   - ✅ Fix existing contract tests
+   - ✅ Add extended test cases (26 total tests passing)
+   - ✅ Test role management and permissions
+   - ✅ Test loan lifecycle and status transitions
+   - ✅ Add transaction and gas usage tests
+   - ⏳ Add integration tests with frontend components
 
 ## Next Steps After Current Priorities
 

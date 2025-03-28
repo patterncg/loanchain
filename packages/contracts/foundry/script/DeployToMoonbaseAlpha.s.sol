@@ -27,7 +27,7 @@ contract DeployToMoonbaseAlpha is Script {
         LoanToken loanToken = new LoanToken(baseURI);
         
         // Log the deployment results
-        console.log("✅ LoanToken deployed successfully!");
+        console.log("[SUCCESS] LoanToken deployed successfully!");
         console.log("Contract address:", address(loanToken));
         
         // Print post-deployment information and instructions

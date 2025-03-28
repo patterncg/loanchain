@@ -65,13 +65,19 @@
   - ✅ Basic UI components tests are passing (22 tests)
   - ⏳ Hook tests for useTransaction need improved mocking
   - ⏳ Contract integration tests need expectations updated
+- Smart contract tests with Foundry (TEST-001)
+  - ✅ Set up Foundry testing environment
+  - ✅ Fixed existing LoanToken contract tests
+  - ✅ Added extended test cases for edge cases and role management
+  - ✅ Added transaction and gas usage test suite
+  - ✅ Total of 26 passing tests covering core functionality
+  - ⏳ Pending integration tests with frontend
 
 ## Pending
 
 - Contract verification script (DEPLOY-002)
 - Frontend deployment configuration for Vercel (DEPLOY-003)
 - Environment variables setup (DEPLOY-004)
-- Smart contract tests with Foundry (TEST-001)
 - E2E testing with Playwright (TEST-003)
 - Manual test plan for complete user journey (TEST-004)
 
